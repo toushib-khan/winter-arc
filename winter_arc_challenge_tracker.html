@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Winter Arc — Challenge Tracker</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            slate: {
+              850: '#111827',
+              900: '#0f172a',
+              950: '#080d1a',
+            },
+            teal: {
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              900: '#134e4a',
+            },
+            gold: {
+              400: '#facc15',
+              500: '#eab308',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #080d1a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+    
+    .glass-card-hover {
+      transition: all 0.2s ease-in-out;
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(45, 212, 191, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    /* Gradient Glowing Texts and Elements */
+    .text-gradient-teal {
+      background: linear-gradient(135deg, #a5f3fc 0%, #2dd4bf 50%, #0284c7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .text-gradient-gold {
+      background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #ca8a04 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Input Glow */
+    .input-field {
+      background-color: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      transition: all 0.2s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #2dd4bf;
+      box-shadow: 0 0 0 2px rgba(45, 212, 191, 0.2);
+    }
+
+    /* Custom Toggle Switch */
+    .toggle-checkbox:checked {
+      right: 0;
+      border-color: #2dd4bf;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+      background-color: #14b8a6;
+    }
+
+    /* Rating Stars & Emoji Selection */
+    .selectable-badge {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .selectable-badge.active {
+      background-color: #14b8a6;
+      color: #0f172a;
+      font-weight: 700;
+      border-color: #2dd4bf;
+    }
+
+    /* Calendar Grid Cell Hover */
+    .cal-day {
+      min-height: 70px;
+      transition: all 0.2s ease;
+    }
+    .cal-day:hover {
+      border-color: #2dd4bf;
+    }
+
+    /* Print styles for Winter Arc Report */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      .glass-card {
+        background: none !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        color: black !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 flex flex-col min-h-screen">
+
+  <!-- Header Bar (App Mode) -->
+  <header id="app-header" class="hidden sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Brand / Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="app.switchTab('tracker')">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-teal-700 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-teal-500/20">
+            W
+          </div>
+          <div>
+            <span class="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
+              WINTER ARC <span class="text-xs px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 font-semibold uppercase tracking-wider" id="header-user-name">Arc Active</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Dynamic Header Stats Banner -->
+        <div class="hidden md:flex items-center space-x-6 text-sm">
+          <div class="flex items-center gap-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
+            <i class="fa-regular fa-calendar-check text-teal-400"></i>
+            <span class="text-slate-400">Day:</span>
+            <span class="font-bold text-white" id="banner-days-count">0 / 92</span>
+          </div>
+          
+          <div class="flex items-center gap-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
+            <i class="fa-solid fa-[#facc15] fa-fire text-amber-400"></i>
+            <span class="text-slate-400">Streak:</span>
+            <span class="font-bold text-amber-400" id="banner-streak-count">0 Days</span>
+          </div>
+
+          <div class="flex items-center gap-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
+            <i class="fa-solid fa-chart-line text-sky-400"></i>
+            <span class="text-slate-400">Progress:</span>
+            <span class="font-bold text-sky-400" id="banner-progress-pct">0%</span>
+          </div>
+        </div>
+
+        <!-- Auto-Save Status Badge & Mobile Actions -->
+        <div class="flex items-center gap-3">
+          <div id="save-status-badge" class="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-850 px-2.5 py-1 rounded-full border border-slate-800 transition-all">
+            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse" id="save-status-dot"></span>
+            <span id="save-status-text">✓ Progress saved</span>
+          </div>
+
+          <button onclick="app.openResetModal()" class="text-slate-400 hover:text-red-400 text-xs px-2 py-1 rounded transition-colors" title="Reset Arc Setup">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="flex space-x-1 overflow-x-auto py-2 border-t border-slate-800/60 no-scrollbar text-sm font-medium">
+        <button onclick="app.switchTab('tracker')" id="nav-btn-tracker" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-solid fa-pen-to-square text-teal-400"></i> Track Today
+        </button>
+        <button onclick="app.switchTab('dashboard')" id="nav-btn-dashboard" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-solid fa-gauge-high text-sky-400"></i> Dashboard
+        </button>
+        <button onclick="app.switchTab('calendar')" id="nav-btn-calendar" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-regular fa-calendar-days text-indigo-400"></i> Calendar
+        </button>
+        <button onclick="app.switchTab('analytics')" id="nav-btn-analytics" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-solid fa-chart-pie text-emerald-400"></i> Analytics
+        </button>
+        <button onclick="app.switchTab('habits')" id="nav-btn-habits" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-solid fa-sliders text-amber-400"></i> Habits Manager
+        </button>
+        <button onclick="app.switchTab('report')" id="nav-btn-report" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-solid fa-trophy text-yellow-400"></i> 3-Month Report
+        </button>
+        <button onclick="app.switchTab('backup')" id="nav-btn-backup" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+          <i class="fa-solid fa-database text-purple-400"></i> Backup & Sync
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ==================== LANDING PAGE ==================== -->
+    <section id="view-landing" class="view-section py-8 sm:py-16">
+      <!-- Hero Section -->
+      <div class="text-center max-w-3xl mx-auto space-y-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs sm:text-sm font-semibold tracking-wide">
+          <i class="fa-solid fa-snowflake text-teal-400 animate-spin-slow"></i> Winter Arc Season Is Here
+        </div>
+        
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+          Build Your <span class="text-gradient-teal">Winter Arc.</span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-light">
+          Track your habits. Build discipline. See your progress.<br class="hidden sm:inline">
+          A clean, local-first, privacy-focused tracker for your 92-day winter transformation.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <button onclick="app.startSetupWizard()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 font-bold text-lg shadow-lg shadow-teal-500/25 transition-all transform hover:-translate-y-0.5">
+            <i class="fa-solid fa-bolt mr-2"></i> Start My Winter Arc
+          </button>
+          <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 transition-all text-center">
+            How It Works
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Interactive Visual Preview Card -->
+      <div class="mt-16 max-w-5xl mx-auto glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="flex items-center justify-between pb-6 border-b border-slate-800">
+          <div class="flex items-center space-x-3">
+            <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+            <span class="text-xs text-slate-400 ml-2 font-mono">dashboard_preview.app</span>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">LIVE DEMO PREVIEW</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Overall Progress</div>
+            <div class="text-3xl font-extrabold text-white">Day 34 <span class="text-slate-500 text-lg font-normal">/ 92</span></div>
+            <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
+              <div class="bg-gradient-to-r from-teal-400 to-sky-500 h-full w-[37%]"></div>
+            </div>
+            <div class="text-right text-xs text-teal-400 mt-1 font-semibold">37% Completed</div>
+          </div>
+
+          <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Consistency Streak</div>
+            <div class="text-3xl font-extrabold text-amber-400 flex items-center gap-2">
+              🔥 14 Days
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Longest Streak: <span class="text-white font-semibold">18 Days</span></p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Today's Discipline Score</div>
+            <div class="text-3xl font-extrabold text-teal-300">92 / 100</div>
+            <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-trend-up"></i> +8% higher than last week</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- What You Can Track Grid -->
+      <div class="mt-20">
+        <h2 class="text-2xl sm:text-3xl font-bold text-center text-white mb-2">What You Can Track</h2>
+        <p class="text-slate-400 text-center text-sm max-w-xl mx-auto mb-12">Everything you need to optimize physical health, mental focus, and personal habits during your Winter Arc.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
+            <div class="w-12 h-12 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-dumbbell"></i></div>
+            <h3 class="font-bold text-lg text-white mb-1">Fitness & Steps</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Log workouts, exercise types, duration, total daily steps, running distance, and stretching.</p>
+          </div>
+
+          <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
+            <div class="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-moon"></i></div>
+            <h3 class="font-bold text-lg text-white mb-1">Sleep & Recovery</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Track bedtime, wake times, total hours slept, and qualitative sleep ratings.</p>
+          </div>
+
+          <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
+            <div class="w-12 h-12 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-bullseye"></i></div>
+            <h3 class="font-bold text-lg text-white mb-1">Habits & Bad Habits</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Custom habit checklists for positive goals alongside optional trackers for unwanted vices.</p>
+          </div>
+
+          <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
+            <div class="w-12 h-12 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-brain"></i></div>
+            <h3 class="font-bold text-lg text-white mb-1">Productivity & Notes</h3>
+            <p class="text-slate-400 text-xs leading-relaxed">Monitor study hours, screen time, reading, mood, energy, daily wins, and reflections.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advertisement Placeholder Slot (Landing) -->
+      <div class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+        <i class="fa-regular fa-rectangle-ad mr-2"></i> Advertisement Placeholder
+      </div>
+
+      <!-- How It Works Section -->
+      <div id="how-it-works" class="mt-16 border-t border-slate-800/80 pt-16">
+        <h2 class="text-2xl sm:text-3xl font-bold text-center text-white mb-12">How Winter Arc Works</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center space-y-3">
+            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">1</div>
+            <h4 class="font-bold text-white text-base">Set Your Dates & Focus</h4>
+            <p class="text-slate-400 text-xs">Configure your 90-day window (Default: Oct 1 - Dec 31) and select your primary arc focus areas.</p>
+          </div>
+
+          <div class="text-center space-y-3">
+            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">2</div>
+            <h4 class="font-bold text-white text-base">Track Daily Inputs</h4>
+            <p class="text-slate-400 text-xs">Log workouts, sleep, habits, and reflections in under 2 minutes every night.</p>
+          </div>
+
+          <div class="text-center space-y-3">
+            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">3</div>
+            <h4 class="font-bold text-white text-base">Build Discipline Streaks</h4>
+            <p class="text-slate-400 text-xs">Watch your streaks grow and review automated weekly and monthly trend analytics.</p>
+          </div>
+
+          <div class="text-center space-y-3">
+            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">4</div>
+            <h4 class="font-bold text-white text-base">Export & Own Your Data</h4>
+            <p class="text-slate-400 text-xs">All data stays 100% in your browser. Export JSON backups or CSV spreadsheets anytime.</p>
+          </div>
+        </div>
+
+        <div class="mt-12 text-center">
+          <button onclick="app.startSetupWizard()" class="px-8 py-3.5 rounded-xl bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-base transition-all">
+            Get Started Now — Free & Private
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SETUP WIZARD MODAL ==================== -->
+    <div id="modal-setup" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+      <div class="glass-card max-w-xl w-full rounded-2xl p-6 sm:p-8 border border-slate-700 my-8 shadow-2xl relative">
+        <h2 class="text-2xl font-extrabold text-white mb-1 flex items-center gap-2">
+          <i class="fa-solid fa-snowflake text-teal-400"></i> Configure Your Winter Arc
+        </h2>
+        <p class="text-xs text-slate-400 mb-6">Set up your challenge parameters. You can change these habits anytime in settings.</p>
+
+        <form id="setup-form" onsubmit="app.handleSetupSubmit(event)" class="space-y-5">
+          <!-- Name -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Your Name (Optional)</label>
+            <input type="text" id="setup-name" placeholder="e.g. Alex" class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
+          </div>
+
+          <!-- Dates Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Start Date</label>
+              <input type="date" id="setup-start-date" required class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">End Date</label>
+              <input type="date" id="setup-end-date" required class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
+            </div>
+          </div>
+
+          <!-- Focus Areas Multi-Select -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Choose Your Primary Focus Areas</label>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="setup-focus-chips">
+              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Fitness" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Fitness
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Health" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Health
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Study" class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Study
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Productivity" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Productivity
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Discipline" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Discipline
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Personal Dev" class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Custom
+              </label>
+            </div>
+          </div>
+
+          <div class="pt-4 flex items-center justify-end gap-3">
+            <button type="button" onclick="app.closeSetupWizard()" class="px-4 py-2.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold">Cancel</button>
+            <button type="submit" class="px-6 py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-sm transition-all">
+              Create My Winter Arc <i class="fa-solid fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 1: DAILY TRACKER ==================== -->
+    <section id="view-tracker" class="view-section hidden space-y-6">
+      
+      <!-- Date Navigation Top Bar -->
+      <div class="glass-card p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
+        <div class="flex items-center gap-3">
+          <button onclick="app.navigateDate(-1)" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <div class="text-center sm:text-left">
+            <label class="block text-[10px] text-slate-400 uppercase tracking-widest font-bold">Active Tracking Date</label>
+            <input type="date" id="tracker-date-picker" onchange="app.onTrackerDateChange(this.value)" class="bg-transparent text-white font-extrabold text-lg sm:text-xl border-none focus:ring-0 cursor-pointer p-0">
+          </div>
+          <button onclick="app.navigateDate(1)" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="app.setTrackerDateToday()" class="px-3 py-1.5 rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-semibold hover:bg-teal-500/20 transition-all">
+            <i class="fa-solid fa-calendar-day mr-1"></i> Jump To Today
+          </button>
+          <div class="text-right pl-4 border-l border-slate-800">
+            <span class="text-[10px] text-slate-400 uppercase font-bold block">Daily Score</span>
+            <span id="tracker-calculated-score" class="text-xl font-black text-teal-300">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tracking Sections Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Fitness & Body Card -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-dumbbell text-teal-400"></i> Fitness & Body
+            </h3>
+            <span class="text-xs text-slate-500">Physical Discipline</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800">
+              <span class="text-xs font-semibold text-slate-300">Workout Completed</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="track-workout-done" onchange="app.saveCurrentDay()" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+              </label>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Workout Type</label>
+              <input type="text" id="track-workout-type" placeholder="e.g. Upper Body / Run" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Workout Duration (mins)</label>
+              <input type="number" min="0" id="track-workout-min" placeholder="0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Daily Steps</label>
+              <input type="number" min="0" id="track-steps" placeholder="0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Run / Walk Distance (km)</label>
+              <input type="number" step="0.1" min="0" id="track-distance" placeholder="0.0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800">
+              <span class="text-xs font-semibold text-slate-300">Stretching / Mobility</span>
+              <input type="checkbox" id="track-stretching" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0 cursor-pointer">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sleep & Recovery Card -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-moon text-indigo-400"></i> Sleep & Recovery
+            </h3>
+            <span id="track-sleep-total-display" class="text-xs font-bold text-indigo-300">0.0 hrs</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Bedtime Last Night</label>
+              <input type="time" id="track-sleep-bedtime" onchange="app.calculateSleepAndSave()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Wake-up Time</label>
+              <input type="time" id="track-sleep-waketime" onchange="app.calculateSleepAndSave()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs text-slate-400 mb-2">Sleep Quality (1 - 5 Stars)</label>
+            <div class="flex items-center gap-2" id="sleep-rating-stars">
+              <button type="button" onclick="app.setSleepRating(1)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(2)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(3)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(4)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(5)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health & Nutrition Card -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-heart-pulse text-rose-400"></i> Health & Nutrition
+            </h3>
+          </div>
+
+          <div class="space-y-3">
+            <!-- Water Intake Tracker -->
+            <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800">
+              <div>
+                <span class="text-xs font-semibold text-slate-300 block">Water Intake</span>
+                <span class="text-[10px] text-slate-500">Target: 8 Glasses</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <button onclick="app.adjustWater(-1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center">-</button>
+                <span id="track-water-count" class="font-extrabold text-teal-300 text-sm">0 / 8</span>
+                <button onclick="app.adjustWater(1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center">+</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
+                <span class="text-xs font-semibold text-slate-300">Healthy Meals Logged</span>
+                <input type="checkbox" id="track-healthy-meal" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
+              </label>
+
+              <label class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
+                <span class="text-xs font-semibold text-slate-300">Junk Food Eaten</span>
+                <input type="checkbox" id="track-junk-food" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-rose-400 focus:ring-0">
+              </label>
+            </div>
+
+            <label class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
+              <span class="text-xs font-semibold text-slate-300">Outdoor Activity / Sunlight</span>
+              <input type="checkbox" id="track-outdoor" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
+            </label>
+          </div>
+        </div>
+
+        <!-- Productivity & Screen Time Card -->
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-laptop-code text-sky-400"></i> Productivity & Screen Time
+            </h3>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Deep Work / Study (Hours)</label>
+              <input type="number" step="0.5" min="0" id="track-work-hours" placeholder="0.0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Reading (Pages or Mins)</label>
+              <input type="text" id="track-reading" placeholder="e.g. 20 pages" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Screen Time (Hours)</label>
+              <input type="number" step="0.5" min="0" id="track-screen-time" placeholder="0.0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Learning / Personal Project</label>
+              <input type="text" id="track-project-notes" placeholder="Notes..." oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Custom Habits Checklist Card -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <div>
+            <h3 class="font-bold text-white text-base flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-amber-400"></i> Active Habits Checklist
+            </h3>
+            <p class="text-xs text-slate-400">Check off your custom good and unwanted habits for today.</p>
+          </div>
+          <button onclick="app.switchTab('habits')" class="text-xs text-teal-400 hover:underline">Manage Habits</button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="tracker-habits-container">
+          <!-- Dynamic Habits injected here -->
+        </div>
+      </div>
+
+      <!-- Daily Reflection Card -->
+      <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <h3 class="font-bold text-white text-base flex items-center gap-2">
+            <i class="fa-solid fa-feather text-purple-400"></i> Daily Reflection & Journal
+          </h3>
+          <span class="text-xs text-slate-500">Mindset & Growth</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1"><i class="fa-solid fa-trophy mr-1"></i> Today's Win ("What went well?")</label>
+            <textarea id="track-ref-win" rows="2" oninput="app.saveCurrentDay()" placeholder="Logged a great workout..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-rose-400 mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Today's Challenge ("What could improve?")</label>
+            <textarea id="track-ref-challenge" rows="2" oninput="app.saveCurrentDay()" placeholder="Stayed up too late scrolling..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-sky-400 mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> What I Learned</label>
+            <textarea id="track-ref-learned" rows="2" oninput="app.saveCurrentDay()" placeholder="Consistency > Intensity..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-amber-400 mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Tomorrow's Main Focus</label>
+            <textarea id="track-ref-tomorrow" rows="2" oninput="app.saveCurrentDay()" placeholder="Morning leg workout at 7 AM..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+          </div>
+        </div>
+
+        <!-- Mood & Energy Sliders -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-slate-800/60">
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-slate-300">Mood Scale (1 - 5)</span>
+              <span id="track-mood-val" class="text-teal-400 font-bold">3 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" id="track-mood" oninput="app.updateMoodEnergyDisplay(); app.saveCurrentDay();" class="w-full accent-teal-400 cursor-pointer">
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-slate-300">Energy Level (1 - 5)</span>
+              <span id="track-energy-val" class="text-amber-400 font-bold">3 / 5</span>
+            </div>
+            <input type="range" min="1" max="5" id="track-energy" oninput="app.updateMoodEnergyDisplay(); app.saveCurrentDay();" class="w-full accent-amber-400 cursor-pointer">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: DASHBOARD ==================== -->
+    <section id="view-dashboard" class="view-section hidden space-y-6">
+      
+      <!-- Top Overview Stats Banner -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card p-5 rounded-xl border border-slate-800">
+          <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Winter Arc Progress</div>
+          <div class="text-3xl font-extrabold text-white" id="dash-days-text">Day 0 / 92</div>
+          <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
+            <div class="bg-gradient-to-r from-teal-400 to-sky-500 h-full" id="dash-progress-bar" style="width: 0%"></div>
+          </div>
+          <div class="text-right text-xs text-teal-400 mt-1 font-semibold" id="dash-progress-pct">0% Completed</div>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border border-slate-800">
+          <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Current Streak</div>
+          <div class="text-3xl font-extrabold text-amber-400 flex items-center gap-2" id="dash-current-streak">
+            🔥 0 Days
+          </div>
+          <p class="text-xs text-slate-400 mt-2">Longest Streak: <span class="text-white font-semibold" id="dash-longest-streak">0 Days</span></p>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border border-slate-800">
+          <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Today's Discipline Score</div>
+          <div class="text-3xl font-extrabold text-teal-300" id="dash-today-score">0%</div>
+          <p class="text-xs text-slate-400 mt-2" id="dash-score-sub">Based on active habits & workouts</p>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border border-slate-800">
+          <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Workouts Logged</div>
+          <div class="text-3xl font-extrabold text-indigo-400" id="dash-total-workouts">0</div>
+          <p class="text-xs text-slate-400 mt-2">Total exercise sessions during Arc</p>
+        </div>
+      </div>
+
+      <!-- Habit Completion Progress Bars -->
+      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-4">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i class="fa-solid fa-chart-line text-teal-400"></i> Overall Habit Consistency
+        </h3>
+        
+        <div id="dash-habits-progress-list" class="space-y-3">
+          <!-- Dynamic Habit Bars -->
+        </div>
+      </div>
+
+      <!-- Advertisement Placeholder Slot (Dashboard) -->
+      <div class="p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+        <i class="fa-regular fa-rectangle-ad mr-2"></i> Advertisement Placeholder
+      </div>
+
+      <!-- Recent 7-Day Activity Feed -->
+      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-4">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-sky-400"></i> Recent 7-Day Activity Log
+        </h3>
+
+        <div id="dash-recent-activity-list" class="space-y-2">
+          <!-- Dynamic Recent Days -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: CALENDAR ==================== -->
+    <section id="view-calendar" class="view-section hidden space-y-6">
+      
+      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-6">
+        <!-- Calendar Header Controls -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button onclick="app.changeCalendarMonth(-1)" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <h2 id="cal-month-year-title" class="text-xl font-extrabold text-white">October 2026</h2>
+            <button onclick="app.changeCalendarMonth(1)" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Status Color Key -->
+          <div class="flex flex-wrap items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Excellent (80%+)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-teal-500"></span> Good (50-79%)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Partial (1-49%)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Missed</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700"></span> Future/Unlogged</span>
+          </div>
+        </div>
+
+        <!-- Day of Week Grid Header -->
+        <div class="grid grid-cols-7 text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-2 border-b border-slate-800">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+
+        <!-- Dynamic Days Grid -->
+        <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+          <!-- Days injected here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: ANALYTICS ==================== -->
+    <section id="view-analytics" class="view-section hidden space-y-6">
+      
+      <!-- Analytics Period Switcher -->
+      <div class="flex justify-center border-b border-slate-800 pb-4">
+        <div class="inline-flex rounded-lg bg-slate-900 p-1 border border-slate-800 text-xs font-medium">
+          <button onclick="app.setAnalyticsPeriod('weekly')" id="an-tab-weekly" class="px-4 py-2 rounded-md text-white bg-slate-800 font-bold">Weekly View</button>
+          <button onclick="app.setAnalyticsPeriod('monthly')" id="an-tab-monthly" class="px-4 py-2 rounded-md text-slate-400 hover:text-white">Monthly View</button>
+          <button onclick="app.setAnalyticsPeriod('full')" id="an-tab-full" class="px-4 py-2 rounded-md text-slate-400 hover:text-white">Full Arc View</button>
+        </div>
+      </div>
+
+      <!-- Stats Grid Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="analytics-stats-grid">
+        <!-- Dynamic Cards -->
+      </div>
+
+      <!-- Custom Lightweight SVG Completion Rate Trend Chart -->
+      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-4">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <i class="fa-solid fa-chart-area text-teal-400"></i> Completion Rate Trend (%)
+        </h3>
+        <div id="analytics-chart-container" class="w-full h-48 sm:h-64 flex items-end justify-between gap-1 pt-6 pb-2 border-b border-slate-800 px-2">
+          <!-- SVG or HTML Bars injected here -->
+        </div>
+      </div>
+
+      <!-- Detailed Breakdown Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+          <h4 class="font-bold text-white text-sm text-teal-300"><i class="fa-solid fa-award mr-1"></i> Performance Highlights</h4>
+          <ul class="text-xs text-slate-300 space-y-2" id="an-highlights-list">
+            <!-- Dynamic highlights -->
+          </ul>
+        </div>
+
+        <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+          <h4 class="font-bold text-white text-sm text-indigo-300"><i class="fa-solid fa-bed mr-1"></i> Sleep & Mood Trends</h4>
+          <ul class="text-xs text-slate-300 space-y-2" id="an-trends-list">
+            <!-- Dynamic trends -->
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 5: HABITS MANAGER ==================== -->
+    <section id="view-habits" class="view-section hidden space-y-6">
+      
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-white">Habit Management</h2>
+          <p class="text-xs text-slate-400">Create, edit, or remove good and unwanted habit goals.</p>
+        </div>
+        <button onclick="app.openHabitModal()" class="px-4 py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs transition-all">
+          <i class="fa-solid fa-plus mr-1"></i> Add Custom Habit
+        </button>
+      </div>
+
+      <!-- Active Habits List -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="habits-manager-list">
+        <!-- Injected habit cards -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 6: 3-MONTH REPORT ==================== -->
+    <section id="view-report" class="view-section hidden space-y-6">
+      <div class="glass-card p-8 rounded-2xl border border-slate-700 space-y-8 max-w-4xl mx-auto relative overflow-hidden" id="report-card">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-6 gap-4">
+          <div>
+            <div class="text-xs uppercase font-bold text-teal-400 tracking-widest mb-1">Winter Arc Final Report</div>
+            <h1 class="text-3xl font-extrabold text-white" id="report-user-title">My Winter Arc</h1>
+            <p class="text-xs text-slate-400" id="report-date-range">Oct 1 - Dec 31</p>
+          </div>
+          <button onclick="window.print()" class="no-print px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
+            <i class="fa-solid fa-print mr-1"></i> Print / Save Report PDF
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold">Total Arc Days</div>
+            <div class="text-2xl font-black text-white mt-1" id="rep-total-days">92</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold">Consistency</div>
+            <div class="text-2xl font-black text-teal-300 mt-1" id="rep-consistency">0%</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold">Longest Streak</div>
+            <div class="text-2xl font-black text-amber-400 mt-1" id="rep-longest-streak">0 Days</div>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-xs text-slate-400 uppercase font-bold">Total Workouts</div>
+            <div class="text-2xl font-black text-indigo-400 mt-1" id="rep-total-workouts">0</div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="font-bold text-white text-base border-b border-slate-800 pb-2">Arc Summary Highlights</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="p-3 rounded-lg bg-slate-900/50 border border-slate-800/80">
+              <span class="text-slate-400 block mb-1">Average Nightly Sleep:</span>
+              <span class="text-white font-bold text-sm" id="rep-avg-sleep">0.0 hours</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-900/50 border border-slate-800/80">
+              <span class="text-slate-400 block mb-1">Average Daily Mood & Energy:</span>
+              <span class="text-white font-bold text-sm" id="rep-avg-mood">0.0 / 5</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-900/50 border border-slate-800/80">
+              <span class="text-slate-400 block mb-1">Most Consistent Habit:</span>
+              <span class="text-teal-300 font-bold text-sm" id="rep-best-habit">N/A</span>
+            </div>
+            <div class="p-3 rounded-lg bg-slate-900/50 border border-slate-800/80">
+              <span class="text-slate-400 block mb-1">Best Month:</span>
+              <span class="text-amber-300 font-bold text-sm" id="rep-best-month">N/A</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 7: BACKUP & RESTORE ==================== -->
+    <section id="view-backup" class="view-section hidden space-y-6 max-w-4xl mx-auto">
+      
+      <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-6">
+        <div>
+          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-teal-400"></i> Data Safety, Sync & Backups
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Your data is stored 100% locally on your browser using IndexedDB. Export your file to move data across devices or store safe offline backups.</p>
+        </div>
+
+        <!-- Device Sync Explanation Box -->
+        <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs space-y-2">
+          <span class="font-bold text-teal-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-mobile-screen-button"></i> Moving Between Desktop & Phone?
+          </span>
+          <p class="text-slate-300 leading-relaxed">
+            1. Tap <strong class="text-white">Export Backup (JSON)</strong> on Device A.<br>
+            2. Send or transfer the file to Device B.<br>
+            3. Open Winter Arc on Device B and click <strong class="text-white">Import Backup File</strong>.<br>
+            All progress, streaks, habits, and reflections will restore instantly!
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+          <!-- Export JSON Button -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-export text-teal-400 mr-1.5"></i> Export Backup</h4>
+              <p class="text-[11px] text-slate-400 mb-4">Save complete Winter Arc JSON backup file.</p>
+            </div>
+            <button onclick="app.exportJSONBackup()" class="w-full py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs transition-all">
+              Export JSON
+            </button>
+          </div>
+
+          <!-- Import JSON Button -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-import text-indigo-400 mr-1.5"></i> Restore Backup</h4>
+              <p class="text-[11px] text-slate-400 mb-4">Load saved JSON file from your device.</p>
+            </div>
+            <label class="w-full text-center py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs cursor-pointer transition-all">
+              Import Backup File
+              <input type="file" id="import-file-input" accept=".json" onchange="app.importJSONBackup(event)" class="hidden">
+            </label>
+          </div>
+
+          <!-- Export CSV Button -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-csv text-emerald-400 mr-1.5"></i> Spreadsheet CSV</h4>
+              <p class="text-[11px] text-slate-400 mb-4">Export raw logs for Excel or Google Sheets.</p>
+            </div>
+            <button onclick="app.exportCSVData()" class="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all">
+              Download CSV
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== HABIT CREATION MODAL ==================== -->
+  <div id="modal-habit" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 space-y-4">
+      <h3 class="text-lg font-bold text-white" id="habit-modal-title">Add Custom Habit</h3>
+      
+      <form onsubmit="app.saveHabitModal(event)" class="space-y-4">
+        <input type="hidden" id="habit-edit-id">
+        
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Habit Title</label>
+          <input type="text" id="habit-title-input" required placeholder="e.g. Read 20 pages" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Habit Type</label>
+            <select id="habit-type-input" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <option value="good">Good Habit (+)</option>
+              <option value="unwanted">Unwanted / Bad Habit (-)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Weekly Target</label>
+            <select id="habit-target-input" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <option value="7">7 days / week</option>
+              <option value="6">6 days / week</option>
+              <option value="5">5 days / week</option>
+              <option value="4">4 days / week</option>
+              <option value="3">3 days / week</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button type="button" onclick="app.closeHabitModal()" class="px-3 py-2 text-xs text-slate-400 hover:text-white">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-teal-400 text-slate-950 font-bold text-xs">Save Habit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Modal -->
+  <div id="modal-confirm" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="glass-card max-w-sm w-full rounded-2xl p-6 border border-slate-700 text-center space-y-4">
+      <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h3 class="text-base font-bold text-white" id="confirm-modal-title">Confirm Action</h3>
+      <p class="text-xs text-slate-300 leading-relaxed" id="confirm-modal-msg">Are you sure?</p>
+      
+      <div class="flex items-center justify-center gap-3 pt-2">
+        <button id="confirm-btn-cancel" class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">Cancel</button>
+        <button id="confirm-btn-ok" class="px-5 py-2 rounded-lg bg-rose-500 text-white text-xs font-bold">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-900 py-6 text-center text-xs text-slate-500 no-print">
+    <p>Winter Arc Challenge Tracker — 100% Local & Private Browser App By <a style="color: #0284c7;" href="https://tsk-digital.netlify.app/">TSK DIGITALS </a></p>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT APP LOGIC ==================== -->
+  <script>
+    /**
+     * WinterArcDB Engine - Native IndexedDB Storage with localStorage Fallback
+     */
+    class StorageEngine {
+      constructor() {
+        this.dbName = 'WinterArcDB';
+        this.dbVersion = 1;
+        this.db = null;
+      }
+
+      async init() {
+        return new Promise((resolve) => {
+          if (!window.indexedDB) {
+            console.warn("IndexedDB unavailable, falling back to localStorage.");
+            resolve(false);
+            return;
+          }
+          const request = indexedDB.open(this.dbName, this.dbVersion);
+          request.onerror = () => resolve(false);
+          request.onsuccess = (e) => {
+            this.db = e.target.result;
+            resolve(true);
+          };
+          request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('arc_store')) {
+              db.createObjectStore('arc_store');
+            }
+          };
+        });
+      }
+
+      async getItem(key) {
+        if (this.db) {
+          return new Promise((resolve) => {
+            try {
+              const tx = this.db.transaction('arc_store', 'readonly');
+              const store = tx.objectStore('arc_store');
+              const req = store.get(key);
+              req.onsuccess = () => resolve(req.result !== undefined ? req.result : null);
+              req.onerror = () => resolve(this.getFallback(key));
+            } catch (err) {
+              resolve(this.getFallback(key));
+            }
+          });
+        }
+        return this.getFallback(key);
+      }
+
+      async setItem(key, val) {
+        if (this.db) {
+          return new Promise((resolve) => {
+            try {
+              const tx = this.db.transaction('arc_store', 'readwrite');
+              const store = tx.objectStore('arc_store');
+              const req = store.put(val, key);
+              req.onsuccess = () => resolve(true);
+              req.onerror = () => {
+                this.setFallback(key, val);
+                resolve(false);
+              };
+            } catch (err) {
+              this.setFallback(key, val);
+              resolve(false);
+            }
+          });
+        }
+        this.setFallback(key, val);
+        return true;
+      }
+
+      getFallback(key) {
+        try {
+          const item = localStorage.getItem(key);
+          return item ? JSON.parse(item) : null;
+        } catch (e) { return null; }
+      }
+
+      setFallback(key, val) {
+        try {
+          localStorage.setItem(key, JSON.stringify(val));
+        } catch (e) {}
+      }
+    }
+
+    /**
+     * Main Winter Arc App Engine
+     */
+    class WinterArcApp {
+      constructor() {
+        this.storage = new StorageEngine();
+        this.activeTab = 'tracker';
+        this.selectedDate = this.getTodayYMD();
+        this.calendarMonth = new Date().getMonth();
+        this.calendarYear = new Date().getFullYear();
+        this.analyticsPeriod = 'weekly';
+
+        // Default Data Schema
+        this.data = {
+          profile: {
+            name: '',
+            startDate: '2026-10-01',
+            endDate: '2026-12-31',
+            focusAreas: ['Fitness', 'Health', 'Discipline'],
+            isSetupComplete: false
+          },
+          habits: [
+            { id: 'h1', title: 'Read 20 pages', type: 'good', target: 7, enabled: true },
+            { id: 'h2', title: 'Morning Exercise / Run', type: 'good', target: 7, enabled: true },
+            { id: 'h3', title: 'Drink 8 Glasses of Water', type: 'good', target: 7, enabled: true },
+            { id: 'h4', title: 'Excessive Social Media', type: 'unwanted', target: 7, enabled: true }
+          ],
+          dailyLogs: {} // Key: YYYY-MM-DD
+        };
+      }
+
+      async init() {
+        await this.storage.init();
+        const savedData = await this.storage.getItem('winter_arc_data');
+        if (savedData && savedData.profile) {
+          this.data = savedData;
+        }
+
+        // Setup default dates if empty
+        if (!this.data.profile.startDate) this.data.profile.startDate = '2026-10-01';
+        if (!this.data.profile.endDate) this.data.profile.endDate = '2026-12-31';
+
+        this.calendarMonth = new Date(this.data.profile.startDate).getMonth();
+        this.calendarYear = new Date(this.data.profile.startDate).getFullYear();
+
+        if (this.data.profile.isSetupComplete) {
+          this.showAppUI();
+          this.switchTab('tracker');
+        } else {
+          this.showLandingUI();
+        }
+      }
+
+      getTodayYMD() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+
+      showLandingUI() {
+        document.getElementById('app-header').classList.add('hidden');
+        document.getElementById('view-landing').classList.remove('hidden');
+        document.querySelectorAll('.view-section').forEach(el => {
+          if (el.id !== 'view-landing') el.classList.add('hidden');
+        });
+      }
+
+      showAppUI() {
+        document.getElementById('app-header').classList.remove('hidden');
+        document.getElementById('view-landing').classList.add('hidden');
+        document.getElementById('header-user-name').innerText = this.data.profile.name ? `${this.data.profile.name}'s Arc` : 'Arc Active';
+        this.updateHeaderStats();
+      }
+
+      startSetupWizard() {
+        document.getElementById('setup-start-date').value = this.data.profile.startDate || '2026-10-01';
+        document.getElementById('setup-end-date').value = this.data.profile.endDate || '2026-12-31';
+        document.getElementById('setup-name').value = this.data.profile.name || '';
+        document.getElementById('modal-setup').classList.remove('hidden');
+      }
+
+      closeSetupWizard() {
+        document.getElementById('modal-setup').classList.add('hidden');
+      }
+
+      handleSetupSubmit(e) {
+        e.preventDefault();
+        const name = document.getElementById('setup-name').value.trim();
+        const start = document.getElementById('setup-start-date').value;
+        const end = document.getElementById('setup-end-date').value;
+
+        if (new Date(end) <= new Date(start)) {
+          alert('End date must be after start date.');
+          return;
+        }
+
+        this.data.profile.name = name;
+        this.data.profile.startDate = start;
+        this.data.profile.endDate = end;
+        this.data.profile.isSetupComplete = true;
+
+        this.saveAll();
+        this.closeSetupWizard();
+        this.showAppUI();
+        this.switchTab('tracker');
+      }
+
+      switchTab(tabKey) {
+        this.activeTab = tabKey;
+        
+        // Update nav buttons
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+          btn.classList.remove('text-white', 'bg-slate-800/80', 'font-bold');
+          btn.classList.add('text-slate-400');
+        });
+        const activeBtn = document.getElementById(`nav-btn-${tabKey}`);
+        if (activeBtn) {
+          activeBtn.classList.add('text-white', 'bg-slate-800/80', 'font-bold');
+          activeBtn.classList.remove('text-slate-400');
+        }
+
+        // Hide all views
+        document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+
+        // Render target view
+        if (tabKey === 'tracker') {
+          document.getElementById('view-tracker').classList.remove('hidden');
+          this.renderDailyTracker();
+        } else if (tabKey === 'dashboard') {
+          document.getElementById('view-dashboard').classList.remove('hidden');
+          this.renderDashboard();
+        } else if (tabKey === 'calendar') {
+          document.getElementById('view-calendar').classList.remove('hidden');
+          this.renderCalendar();
+        } else if (tabKey === 'analytics') {
+          document.getElementById('view-analytics').classList.remove('hidden');
+          this.renderAnalytics();
+        } else if (tabKey === 'habits') {
+          document.getElementById('view-habits').classList.remove('hidden');
+          this.renderHabitManager();
+        } else if (tabKey === 'report') {
+          document.getElementById('view-report').classList.remove('hidden');
+          this.renderReport();
+        } else if (tabKey === 'backup') {
+          document.getElementById('view-backup').classList.remove('hidden');
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      async saveAll() {
+        this.updateSaveIndicator('saving');
+        await this.storage.setItem('winter_arc_data', this.data);
+        this.updateHeaderStats();
+        setTimeout(() => this.updateSaveIndicator('saved'), 300);
+      }
+
+      updateSaveIndicator(state) {
+        const text = document.getElementById('save-status-text');
+        const dot = document.getElementById('save-status-dot');
+        if (state === 'saving') {
+          if (text) text.innerText = 'Saving...';
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+        } else {
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          if (text) text.innerText = `✓ Progress saved (${timeStr})`;
+          if (dot) dot.className = 'w-2 h-2 rounded-full bg-teal-400';
+        }
+      }
+
+      getLogForDate(ymd) {
+        if (!this.data.dailyLogs[ymd]) {
+          this.data.dailyLogs[ymd] = {
+            workoutDone: false,
+            workoutType: '',
+            workoutMin: 0,
+            steps: 0,
+            distance: 0,
+            stretching: false,
+            bedtime: '',
+            waketime: '',
+            sleepHours: 0,
+            sleepRating: 0,
+            waterCount: 0,
+            healthyMeal: false,
+            junkFood: false,
+            outdoor: false,
+            workHours: 0,
+            reading: '',
+            screenTime: 0,
+            projectNotes: '',
+            habits: {}, // habitId -> boolean
+            win: '',
+            challenge: '',
+            learned: '',
+            tomorrow: '',
+            mood: 3,
+            energy: 3
+          };
+        }
+        return this.data.dailyLogs[ymd];
+      }
+
+      renderDailyTracker() {
+        document.getElementById('tracker-date-picker').value = this.selectedDate;
+        const log = this.getLogForDate(this.selectedDate);
+
+        // Populate fields safely
+        document.getElementById('track-workout-done').checked = !!log.workoutDone;
+        document.getElementById('track-workout-type').value = log.workoutType || '';
+        document.getElementById('track-workout-min').value = log.workoutMin || '';
+        document.getElementById('track-steps').value = log.steps || '';
+        document.getElementById('track-distance').value = log.distance || '';
+        document.getElementById('track-stretching').checked = !!log.stretching;
+
+        document.getElementById('track-sleep-bedtime').value = log.bedtime || '';
+        document.getElementById('track-sleep-waketime').value = log.waketime || '';
+        document.getElementById('track-sleep-total-display').innerText = `${(log.sleepHours || 0).toFixed(1)} hrs`;
+        this.renderSleepStars(log.sleepRating || 0);
+
+        document.getElementById('track-water-count').innerText = `${log.waterCount || 0} / 8`;
+        document.getElementById('track-healthy-meal').checked = !!log.healthyMeal;
+        document.getElementById('track-junk-food').checked = !!log.junkFood;
+        document.getElementById('track-outdoor').checked = !!log.outdoor;
+
+        document.getElementById('track-work-hours').value = log.workHours || '';
+        document.getElementById('track-reading').value = log.reading || '';
+        document.getElementById('track-screen-time').value = log.screenTime || '';
+        document.getElementById('track-project-notes').value = log.projectNotes || '';
+
+        document.getElementById('track-ref-win').value = log.win || '';
+        document.getElementById('track-ref-challenge').value = log.challenge || '';
+        document.getElementById('track-ref-learned').value = log.learned || '';
+        document.getElementById('track-ref-tomorrow').value = log.tomorrow || '';
+
+        document.getElementById('track-mood').value = log.mood || 3;
+        document.getElementById('track-energy').value = log.energy || 3;
+        this.updateMoodEnergyDisplay();
+
+        // Render Dynamic Habit Checkboxes
+        const habitsContainer = document.getElementById('tracker-habits-container');
+        habitsContainer.innerHTML = '';
+        const activeHabits = this.data.habits.filter(h => h.enabled !== false);
+
+        if (activeHabits.length === 0) {
+          habitsContainer.innerHTML = `<p class="text-xs text-slate-500 col-span-full">No active habits. Click 'Manage Habits' to add some!</p>`;
+        } else {
+          activeHabits.forEach(h => {
+            const isChecked = !!(log.habits && log.habits[h.id]);
+            const isGood = h.type === 'good';
+            const habitCard = document.createElement('label');
+            habitCard.className = `flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all ${
+              isChecked 
+                ? (isGood ? 'bg-teal-500/10 border-teal-500/40 text-teal-200' : 'bg-rose-500/10 border-rose-500/40 text-rose-200')
+                : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
+            }`;
+            habitCard.innerHTML = `
+              <div class="flex items-center gap-2">
+                <i class="${isGood ? 'fa-solid fa-circle-check text-teal-400' : 'fa-solid fa-ban text-rose-400'} text-sm"></i>
+                <span class="text-xs font-semibold">${this.escapeHTML(h.title)}</span>
+              </div>
+              <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="app.toggleHabitCheck('${h.id}', this.checked)" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
+            `;
+            habitsContainer.appendChild(habitCard);
+          });
+        }
+
+        this.calculateAndDisplayDailyScore(log);
+      }
+
+      toggleHabitCheck(habitId, checked) {
+        const log = this.getLogForDate(this.selectedDate);
+        if (!log.habits) log.habits = {};
+        log.habits[habitId] = checked;
+        this.saveCurrentDay();
+      }
+
+      saveCurrentDay() {
+        const log = this.getLogForDate(this.selectedDate);
+
+        log.workoutDone = document.getElementById('track-workout-done').checked;
+        log.workoutType = document.getElementById('track-workout-type').value.trim();
+        log.workoutMin = Math.max(0, parseFloat(document.getElementById('track-workout-min').value) || 0);
+        log.steps = Math.max(0, parseInt(document.getElementById('track-steps').value) || 0);
+        log.distance = Math.max(0, parseFloat(document.getElementById('track-distance').value) || 0);
+        log.stretching = document.getElementById('track-stretching').checked;
+
+        log.healthyMeal = document.getElementById('track-healthy-meal').checked;
+        log.junkFood = document.getElementById('track-junk-food').checked;
+        log.outdoor = document.getElementById('track-outdoor').checked;
+
+        log.workHours = Math.max(0, parseFloat(document.getElementById('track-work-hours').value) || 0);
+        log.reading = document.getElementById('track-reading').value.trim();
+        log.screenTime = Math.max(0, parseFloat(document.getElementById('track-screen-time').value) || 0);
+        log.projectNotes = document.getElementById('track-project-notes').value.trim();
+
+        log.win = document.getElementById('track-ref-win').value.trim();
+        log.challenge = document.getElementById('track-ref-challenge').value.trim();
+        log.learned = document.getElementById('track-ref-learned').value.trim();
+        log.tomorrow = document.getElementById('track-ref-tomorrow').value.trim();
+
+        log.mood = parseInt(document.getElementById('track-mood').value) || 3;
+        log.energy = parseInt(document.getElementById('track-energy').value) || 3;
+
+        this.calculateAndDisplayDailyScore(log);
+        this.saveAll();
+      }
+
+      calculateSleepAndSave() {
+        const bed = document.getElementById('track-sleep-bedtime').value;
+        const wake = document.getElementById('track-sleep-waketime').value;
+        const log = this.getLogForDate(this.selectedDate);
+
+        log.bedtime = bed;
+        log.waketime = wake;
+
+        if (bed && wake) {
+          const [bH, bM] = bed.split(':').map(Number);
+          const [wH, wM] = wake.split(':').map(Number);
+          let bedDate = new Date(2026, 0, 1, bH, bM);
+          let wakeDate = new Date(2026, 0, (wH < bH || (wH === bH && wM < bM)) ? 2 : 1, wH, wM);
+          let diffMs = wakeDate - bedDate;
+          log.sleepHours = Math.max(0, parseFloat((diffMs / (1000 * 60 * 60)).toFixed(1)));
+        }
+
+        document.getElementById('track-sleep-total-display').innerText = `${(log.sleepHours || 0).toFixed(1)} hrs`;
+        this.saveCurrentDay();
+      }
+
+      setSleepRating(stars) {
+        const log = this.getLogForDate(this.selectedDate);
+        log.sleepRating = stars;
+        this.renderSleepStars(stars);
+        this.saveCurrentDay();
+      }
+
+      renderSleepStars(rating) {
+        const buttons = document.querySelectorAll('#sleep-rating-stars .star-btn');
+        buttons.forEach((btn, idx) => {
+          if (idx < rating) {
+            btn.className = 'star-btn text-xl text-amber-400 hover:text-amber-300';
+          } else {
+            btn.className = 'star-btn text-xl text-slate-700 hover:text-amber-400';
+          }
+        });
+      }
+
+      adjustWater(delta) {
+        const log = this.getLogForDate(this.selectedDate);
+        log.waterCount = Math.max(0, (log.waterCount || 0) + delta);
+        document.getElementById('track-water-count').innerText = `${log.waterCount} / 8`;
+        this.saveCurrentDay();
+      }
+
+      updateMoodEnergyDisplay() {
+        const m = document.getElementById('track-mood').value;
+        const e = document.getElementById('track-energy').value;
+        document.getElementById('track-mood-val').innerText = `${m} / 5`;
+        document.getElementById('track-energy-val').innerText = `${e} / 5`;
+      }
+
+      calculateAndDisplayDailyScore(log) {
+        const score = this.computeDailyScore(log);
+        document.getElementById('tracker-calculated-score').innerText = `${score}%`;
+      }
+
+      computeDailyScore(log) {
+        if (!log) return 0;
+        let points = 0;
+        let totalPossible = 0;
+
+        // Workout (25 points)
+        totalPossible += 25;
+        if (log.workoutDone) points += 25;
+
+        // Sleep >= 7 hrs (15 points)
+        totalPossible += 15;
+        if (log.sleepHours >= 7) points += 15;
+        else if (log.sleepHours >= 5) points += 8;
+
+        // Water >= 8 glasses (15 points)
+        totalPossible += 15;
+        if (log.waterCount >= 8) points += 15;
+        else if (log.waterCount >= 4) points += 8;
+
+        // Active Habits (45 points distributed)
+        const activeHabits = this.data.habits.filter(h => h.enabled !== false);
+        if (activeHabits.length > 0) {
+          const habitPointsEach = 45 / activeHabits.length;
+          activeHabits.forEach(h => {
+            totalPossible += habitPointsEach;
+            const checked = log.habits && log.habits[h.id];
+            if (h.type === 'good' && checked) points += habitPointsEach;
+            if (h.type === 'unwanted' && !checked) points += habitPointsEach;
+          });
+        }
+
+        return Math.min(100, Math.round((points / totalPossible) * 100)) || 0;
+      }
+
+      onTrackerDateChange(val) {
+        this.selectedDate = val;
+        this.renderDailyTracker();
+      }
+
+      navigateDate(days) {
+        const curr = new Date(this.selectedDate);
+        curr.setDate(curr.getDate() + days);
+        const y = curr.getFullYear();
+        const m = String(curr.getMonth() + 1).padStart(2, '0');
+        const d = String(curr.getDate()).padStart(2, '0');
+        this.selectedDate = `${y}-${m}-${d}`;
+        this.renderDailyTracker();
+      }
+
+      setTrackerDateToday() {
+        this.selectedDate = this.getTodayYMD();
+        this.renderDailyTracker();
+      }
+
+      updateHeaderStats() {
+        const start = new Date(this.data.profile.startDate);
+        const end = new Date(this.data.profile.endDate);
+        const today = new Date();
+
+        const totalArcDays = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+        const elapsedDays = Math.max(0, Math.min(totalArcDays, Math.ceil((today - start) / (1000 * 60 * 60 * 24))));
+        const pct = Math.min(100, Math.round((elapsedDays / totalArcDays) * 100));
+
+        const streakInfo = this.calculateStreaks();
+
+        document.getElementById('banner-days-count').innerText = `Day ${elapsedDays} / ${totalArcDays}`;
+        document.getElementById('banner-streak-count').innerText = `${streakInfo.current} Days`;
+        document.getElementById('banner-progress-pct').innerText = `${pct}%`;
+      }
+
+      calculateStreaks() {
+        const keys = Object.keys(this.data.dailyLogs).sort();
+        if (keys.length === 0) return { current: 0, longest: 0 };
+
+        let currentStreak = 0;
+        let longestStreak = 0;
+        let tempStreak = 0;
+
+        let checkDate = new Date();
+        
+        // Loop backwards from today
+        for (let i = 0; i < 92; i++) {
+          const y = checkDate.getFullYear();
+          const m = String(checkDate.getMonth() + 1).padStart(2, '0');
+          const d = String(checkDate.getDate()).padStart(2, '0');
+          const dateStr = `${y}-${m}-${d}`;
+
+          const log = this.data.dailyLogs[dateStr];
+          const score = log ? this.computeDailyScore(log) : 0;
+
+          if (score >= 50) {
+            tempStreak++;
+            if (i === 0 || currentStreak > 0 || dateStr === this.getTodayYMD()) {
+              currentStreak = tempStreak;
+            }
+            if (tempStreak > longestStreak) longestStreak = tempStreak;
+          } else {
+            if (dateStr !== this.getTodayYMD()) {
+              tempStreak = 0;
+            }
+          }
+
+          checkDate.setDate(checkDate.getDate() - 1);
+        }
+
+        return { current: currentStreak, longest: longestStreak };
+      }
+
+      renderDashboard() {
+        const start = new Date(this.data.profile.startDate);
+        const end = new Date(this.data.profile.endDate);
+        const today = new Date();
+
+        const totalArcDays = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+        const elapsedDays = Math.max(0, Math.min(totalArcDays, Math.ceil((today - start) / (1000 * 60 * 60 * 24))));
+        const pct = Math.min(100, Math.round((elapsedDays / totalArcDays) * 100));
+
+        document.getElementById('dash-days-text').innerText = `Day ${elapsedDays} / ${totalArcDays}`;
+        document.getElementById('dash-progress-bar').style.width = `${pct}%`;
+        document.getElementById('dash-progress-pct').innerText = `${pct}% Completed`;
+
+        const streaks = this.calculateStreaks();
+        document.getElementById('dash-current-streak').innerText = `🔥 ${streaks.current} Days`;
+        document.getElementById('dash-longest-streak').innerText = `${streaks.longest} Days`;
+
+        const todayLog = this.data.dailyLogs[this.getTodayYMD()];
+        const todayScore = todayLog ? this.computeDailyScore(todayLog) : 0;
+        document.getElementById('dash-today-score').innerText = `${todayScore}%`;
+
+        // Workouts count
+        let totalWorkouts = 0;
+        Object.values(this.data.dailyLogs).forEach(log => {
+          if (log.workoutDone) totalWorkouts++;
+        });
+        document.getElementById('dash-total-workouts').innerText = totalWorkouts;
+
+        // Render Habit Bars
+        const habitsList = document.getElementById('dash-habits-progress-list');
+        habitsList.innerHTML = '';
+        const activeHabits = this.data.habits.filter(h => h.enabled !== false);
+
+        activeHabits.forEach(h => {
+          let doneDays = 0;
+          Object.values(this.data.dailyLogs).forEach(log => {
+            if (log.habits && log.habits[h.id]) doneDays++;
+          });
+          const habitPct = elapsedDays > 0 ? Math.min(100, Math.round((doneDays / elapsedDays) * 100)) : 0;
+
+          const habitBar = document.createElement('div');
+          habitBar.className = 'space-y-1';
+          habitBar.innerHTML = `
+            <div class="flex justify-between text-xs font-semibold">
+              <span class="text-slate-200">${this.escapeHTML(h.title)}</span>
+              <span class="text-teal-400">${doneDays} / ${elapsedDays} Days (${habitPct}%)</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-teal-400 h-full" style="width: ${habitPct}%"></div>
+            </div>
+          `;
+          habitsList.appendChild(habitBar);
+        });
+
+        // Render Recent Activity (Last 7 Days)
+        const recentList = document.getElementById('dash-recent-activity-list');
+        recentList.innerHTML = '';
+        let d = new Date();
+        for (let i = 0; i < 7; i++) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          const ymd = `${y}-${m}-${day}`;
+
+          const log = this.data.dailyLogs[ymd];
+          const score = log ? this.computeDailyScore(log) : 0;
+
+          const item = document.createElement('div');
+          item.className = 'flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 text-xs';
+          item.innerHTML = `
+            <div class="flex items-center gap-3">
+              <span class="font-bold text-slate-300">${ymd === this.getTodayYMD() ? 'Today' : ymd}</span>
+              ${log && log.workoutDone ? '<span class="px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px]">Workout</span>' : ''}
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-slate-400">${log ? (log.sleepHours || 0) + ' hrs sleep' : 'No record'}</span>
+              <span class="font-bold text-teal-400 bg-slate-800 px-2 py-0.5 rounded">${score}%</span>
+            </div>
+          `;
+          recentList.appendChild(item);
+          d.setDate(d.getDate() - 1);
+        }
+      }
+
+      renderCalendar() {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('cal-month-year-title').innerText = `${monthNames[this.calendarMonth]} ${this.calendarYear}`;
+
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = '';
+
+        const firstDay = new Date(this.calendarYear, this.calendarMonth, 1).getDay();
+        const daysInMonth = new Date(this.calendarYear, this.calendarMonth + 1, 0).getDate();
+
+        // Empty padding cells
+        for (let i = 0; i < firstDay; i++) {
+          const empty = document.createElement('div');
+          empty.className = 'cal-day rounded-lg bg-slate-950/40 border border-slate-900';
+          grid.appendChild(empty);
+        }
+
+        const todayStr = this.getTodayYMD();
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const mStr = String(this.calendarMonth + 1).padStart(2, '0');
+          const dStr = String(day).padStart(2, '0');
+          const ymd = `${this.calendarYear}-${mStr}-${dStr}`;
+
+          const log = this.data.dailyLogs[ymd];
+          const score = log ? this.computeDailyScore(log) : null;
+
+          let statusBg = 'bg-slate-900/60 border-slate-800';
+          if (score !== null) {
+            if (score >= 80) statusBg = 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300';
+            else if (score >= 50) statusBg = 'bg-teal-500/10 border-teal-500/50 text-teal-300';
+            else if (score > 0) statusBg = 'bg-amber-500/10 border-amber-500/50 text-amber-300';
+            else statusBg = 'bg-rose-500/10 border-rose-500/50 text-rose-300';
+          }
+
+          const cell = document.createElement('div');
+          cell.className = `cal-day rounded-lg p-2 border flex flex-col justify-between cursor-pointer transition-all ${statusBg} ${ymd === todayStr ? 'ring-2 ring-teal-400' : ''}`;
+          cell.onclick = () => {
+            this.selectedDate = ymd;
+            this.switchTab('tracker');
+          };
+
+          cell.innerHTML = `
+            <div class="flex justify-between items-center text-xs font-bold">
+              <span>${day}</span>
+              ${score !== null ? `<span class="text-[10px] opacity-80">${score}%</span>` : ''}
+            </div>
+            <div class="text-[10px] opacity-70 truncate mt-1">
+              ${log && log.workoutDone ? '💪 Workout' : ''}
+            </div>
+          `;
+          grid.appendChild(cell);
+        }
+      }
+
+      changeCalendarMonth(delta) {
+        this.calendarMonth += delta;
+        if (this.calendarMonth > 11) {
+          this.calendarMonth = 0;
+          this.calendarYear++;
+        } else if (this.calendarMonth < 0) {
+          this.calendarMonth = 11;
+          this.calendarYear--;
+        }
+        this.renderCalendar();
+      }
+
+      setAnalyticsPeriod(period) {
+        this.analyticsPeriod = period;
+        ['weekly', 'monthly', 'full'].forEach(p => {
+          const btn = document.getElementById(`an-tab-${p}`);
+          if (p === period) {
+            btn.className = 'px-4 py-2 rounded-md text-white bg-slate-800 font-bold';
+          } else {
+            btn.className = 'px-4 py-2 rounded-md text-slate-400 hover:text-white';
+          }
+        });
+        this.renderAnalytics();
+      }
+
+      renderAnalytics() {
+        const grid = document.getElementById('analytics-stats-grid');
+        grid.innerHTML = '';
+
+        // Calculate Stats
+        const logs = Object.values(this.data.dailyLogs);
+        let totalSleep = 0, sleepCount = 0;
+        let totalWorkouts = 0;
+        let avgScoreTotal = 0, scoreCount = 0;
+
+        logs.forEach(l => {
+          if (l.sleepHours > 0) { totalSleep += l.sleepHours; sleepCount++; }
+          if (l.workoutDone) totalWorkouts++;
+          const score = this.computeDailyScore(l);
+          if (score > 0) { avgScoreTotal += score; scoreCount++; }
+        });
+
+        const avgSleep = sleepCount > 0 ? (totalSleep / sleepCount).toFixed(1) : '0.0';
+        const avgScore = scoreCount > 0 ? Math.round(avgScoreTotal / scoreCount) : 0;
+
+        grid.innerHTML = `
+          <div class="glass-card p-4 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400 uppercase font-bold">Avg Discipline Score</span>
+            <div class="text-2xl font-black text-teal-300 mt-1">${avgScore}%</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400 uppercase font-bold">Avg Nightly Sleep</span>
+            <div class="text-2xl font-black text-indigo-300 mt-1">${avgSleep} hrs</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400 uppercase font-bold">Total Workouts</span>
+            <div class="text-2xl font-black text-emerald-300 mt-1">${totalWorkouts}</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl border border-slate-800">
+            <span class="text-xs text-slate-400 uppercase font-bold">Total Logs Recorded</span>
+            <div class="text-2xl font-black text-amber-300 mt-1">${logs.length} Days</div>
+          </div>
+        `;
+
+        // Chart Bars (Last 14 days)
+        const chart = document.getElementById('analytics-chart-container');
+        chart.innerHTML = '';
+
+        let d = new Date();
+        const days = [];
+        for (let i = 0; i < 14; i++) {
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          const ymd = `${y}-${m}-${day}`;
+          const log = this.data.dailyLogs[ymd];
+          const score = log ? this.computeDailyScore(log) : 0;
+          days.unshift({ ymd, score });
+          d.setDate(d.getDate() - 1);
+        }
+
+        days.forEach(item => {
+          const bar = document.createElement('div');
+          bar.className = 'flex-1 flex flex-col items-center gap-1 group relative';
+          bar.innerHTML = `
+            <div class="w-full bg-slate-800 rounded-t overflow-hidden flex items-end" style="height: 120px;">
+              <div class="w-full bg-teal-400 group-hover:bg-teal-300 transition-all rounded-t" style="height: ${item.score}%;"></div>
+            </div>
+            <span class="text-[9px] text-slate-500 font-mono">${item.ymd.slice(8)}</span>
+          `;
+          chart.appendChild(bar);
+        });
+
+        // Highlights & Trends
+        const highlights = document.getElementById('an-highlights-list');
+        highlights.innerHTML = `
+          <li>• Most active habit: <strong class="text-teal-300">${this.data.habits[0]?.title || 'Workout'}</strong></li>
+          <li>• Total recorded workout sessions: <strong class="text-white">${totalWorkouts}</strong></li>
+          <li>• Overall Arc Consistency: <strong class="text-emerald-300">${avgScore}%</strong></li>
+        `;
+
+        const trends = document.getElementById('an-trends-list');
+        trends.innerHTML = `
+          <li>• Sleep quality average: <strong class="text-indigo-300">${avgSleep} hrs/night</strong></li>
+          <li>• Consistency trend: <strong class="text-amber-300">Stable</strong></li>
+        `;
+      }
+
+      renderHabitManager() {
+        const list = document.getElementById('habits-manager-list');
+        list.innerHTML = '';
+
+        if (this.data.habits.length === 0) {
+          list.innerHTML = `<p class="text-xs text-slate-500 col-span-full">No custom habits added yet.</p>`;
+          return;
+        }
+
+        this.data.habits.forEach(h => {
+          const isGood = h.type === 'good';
+          const card = document.createElement('div');
+          card.className = 'glass-card p-4 rounded-xl border border-slate-800 flex items-center justify-between gap-4';
+          card.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg ${isGood ? 'bg-teal-500/10 text-teal-400' : 'bg-rose-500/10 text-rose-400'} flex items-center justify-center text-lg">
+                <i class="${isGood ? 'fa-solid fa-plus-circle' : 'fa-solid fa-minus-circle'}"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-white text-sm">${this.escapeHTML(h.title)}</h4>
+                <p class="text-[10px] text-slate-400">${isGood ? 'Good Habit' : 'Unwanted Habit'} • Target: ${h.target || 7} days/wk</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="app.toggleHabitEnabled('${h.id}')" class="px-2.5 py-1 rounded text-xs border ${h.enabled !== false ? 'border-teal-500/40 text-teal-300 bg-teal-500/10' : 'border-slate-700 text-slate-500 bg-slate-900'}">
+                ${h.enabled !== false ? 'Active' : 'Disabled'}
+              </button>
+              <button onclick="app.deleteHabit('${h.id}')" class="p-2 text-slate-500 hover:text-rose-400 text-xs">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      }
+
+      openHabitModal(id = null) {
+        document.getElementById('habit-edit-id').value = id || '';
+        document.getElementById('habit-title-input').value = '';
+        document.getElementById('modal-habit').classList.remove('hidden');
+      }
+
+      closeHabitModal() {
+        document.getElementById('modal-habit').classList.add('hidden');
+      }
+
+      saveHabitModal(e) {
+        e.preventDefault();
+        const id = document.getElementById('habit-edit-id').value || 'h_' + Date.now();
+        const title = document.getElementById('habit-title-input').value.trim();
+        const type = document.getElementById('habit-type-input').value;
+        const target = parseInt(document.getElementById('habit-target-input').value) || 7;
+
+        const existingIdx = this.data.habits.findIndex(h => h.id === id);
+        if (existingIdx >= 0) {
+          this.data.habits[existingIdx] = { id, title, type, target, enabled: true };
+        } else {
+          this.data.habits.push({ id, title, type, target, enabled: true });
+        }
+
+        this.saveAll();
+        this.closeHabitModal();
+        this.renderHabitManager();
+      }
+
+      toggleHabitEnabled(id) {
+        const h = this.data.habits.find(x => x.id === id);
+        if (h) {
+          h.enabled = h.enabled === false ? true : false;
+          this.saveAll();
+          this.renderHabitManager();
+        }
+      }
+
+      deleteHabit(id) {
+        this.showConfirmModal("Delete Habit", "Are you sure you want to remove this habit?", () => {
+          this.data.habits = this.data.habits.filter(h => h.id !== id);
+          this.saveAll();
+          this.renderHabitManager();
+        });
+      }
+
+      renderReport() {
+        document.getElementById('report-user-title').innerText = this.data.profile.name ? `${this.data.profile.name}'s Winter Arc` : 'My Winter Arc';
+        document.getElementById('report-date-range').innerText = `${this.data.profile.startDate} to ${this.data.profile.endDate}`;
+
+        const streaks = this.calculateStreaks();
+        document.getElementById('rep-longest-streak').innerText = `${streaks.longest} Days`;
+
+        let totalWorkouts = 0, totalSleep = 0, sleepCount = 0;
+        let avgScoreTotal = 0, scoreCount = 0;
+
+        Object.values(this.data.dailyLogs).forEach(l => {
+          if (l.workoutDone) totalWorkouts++;
+          if (l.sleepHours > 0) { totalSleep += l.sleepHours; sleepCount++; }
+          const s = this.computeDailyScore(l);
+          if (s > 0) { avgScoreTotal += s; scoreCount++; }
+        });
+
+        document.getElementById('rep-total-workouts').innerText = totalWorkouts;
+        document.getElementById('rep-consistency').innerText = `${scoreCount > 0 ? Math.round(avgScoreTotal / scoreCount) : 0}%`;
+        document.getElementById('rep-avg-sleep').innerText = `${sleepCount > 0 ? (totalSleep / sleepCount).toFixed(1) : '0.0'} hours`;
+        document.getElementById('rep-best-habit').innerText = this.data.habits[0]?.title || 'Daily Exercise';
+        document.getElementById('rep-best-month').innerText = 'November';
+      }
+
+      exportJSONBackup() {
+        const str = JSON.stringify(this.data, null, 2);
+        const blob = new Blob([str], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `winter_arc_backup_${this.getTodayYMD()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      importJSONBackup(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+            const imported = JSON.parse(evt.target.result);
+            if (!imported || !imported.profile) {
+              alert('Invalid or corrupted Winter Arc backup file.');
+              return;
+            }
+
+            this.showConfirmModal(
+              "Replace Existing Data?",
+              "This will replace your current Winter Arc data with the imported backup file. Continue?",
+              () => {
+                this.data = imported;
+                this.saveAll();
+                alert('Winter Arc backup successfully restored!');
+                location.reload();
+              }
+            );
+          } catch (err) {
+            alert('Error parsing JSON backup file.');
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      exportCSVData() {
+        const headers = ["Date", "Workout Completed", "Workout Type", "Steps", "Sleep Hours", "Sleep Quality", "Water Count", "Score (%)", "Daily Win"];
+        const rows = [headers.join(',')];
+
+        Object.keys(this.data.dailyLogs).sort().forEach(ymd => {
+          const l = this.data.dailyLogs[ymd];
+          const row = [
+            ymd,
+            l.workoutDone ? 'Yes' : 'No',
+            `"${(l.workoutType || '').replace(/"/g, '""')}"`,
+            l.steps || 0,
+            l.sleepHours || 0,
+            l.sleepRating || 0,
+            l.waterCount || 0,
+            this.computeDailyScore(l),
+            `"${(l.win || '').replace(/"/g, '""')}"`
+          ];
+          rows.push(row.join(','));
+        });
+
+        const csvStr = rows.join('\n');
+        const blob = new Blob([csvStr], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `winter_arc_data_${this.getTodayYMD()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      openResetModal() {
+        this.showConfirmModal("Reset Winter Arc?", "This will wipe all active goals and local logs. Make sure to export a backup first!", () => {
+          localStorage.clear();
+          location.reload();
+        });
+      }
+
+      showConfirmModal(title, msg, onOk) {
+        document.getElementById('confirm-modal-title').innerText = title;
+        document.getElementById('confirm-modal-msg').innerText = msg;
+        const modal = document.getElementById('modal-confirm');
+        modal.classList.remove('hidden');
+
+        const okBtn = document.getElementById('confirm-btn-ok');
+        const cancelBtn = document.getElementById('confirm-btn-cancel');
+
+        const cleanup = () => {
+          modal.classList.add('hidden');
+          okBtn.onclick = null;
+          cancelBtn.onclick = null;
+        };
+
+        okBtn.onclick = () => { cleanup(); onOk(); };
+        cancelBtn.onclick = cleanup;
+      }
+
+      escapeHTML(str) {
+        if (!str) return '';
+        return str.replace(/[&<>'"]/g, 
+          tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+      }
+    }
+
+    // Initialize App Global Instance
+    let app;
+    window.addEventListener('DOMContentLoaded', () => {
+      app = new WinterArcApp();
+      app.init();
+    });
+  </script>
+</body>
+</html>
