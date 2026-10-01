@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Winter Arc — Challenge Tracker</title>
-  
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -36,12 +37,13 @@
       }
     }
   </script>
-  
+
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -53,19 +55,22 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
-    
+
     /* Custom scrollbars */
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
     }
+
     ::-webkit-scrollbar-track {
       background: #0f172a;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #1e293b;
       border-radius: 4px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: #334155;
     }
@@ -78,10 +83,11 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
-    
+
     .glass-card-hover {
       transition: all 0.2s ease-in-out;
     }
+
     .glass-card-hover:hover {
       border-color: rgba(45, 212, 191, 0.3);
       transform: translateY(-2px);
@@ -94,7 +100,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    
+
     .text-gradient-gold {
       background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #ca8a04 100%);
       -webkit-background-clip: text;
@@ -108,6 +114,7 @@
       color: #f8fafc;
       transition: all 0.2s ease;
     }
+
     .input-field:focus {
       outline: none;
       border-color: #2dd4bf;
@@ -119,7 +126,8 @@
       right: 0;
       border-color: #2dd4bf;
     }
-    .toggle-checkbox:checked + .toggle-label {
+
+    .toggle-checkbox:checked+.toggle-label {
       background-color: #14b8a6;
     }
 
@@ -128,6 +136,7 @@
       transition: all 0.15s ease;
       cursor: pointer;
     }
+
     .selectable-badge.active {
       background-color: #14b8a6;
       color: #0f172a;
@@ -140,6 +149,7 @@
       min-height: 70px;
       transition: all 0.2s ease;
     }
+
     .cal-day:hover {
       border-color: #2dd4bf;
     }
@@ -150,12 +160,15 @@
         background: white !important;
         color: black !important;
       }
+
       .no-print {
         display: none !important;
       }
+
       .print-only {
         display: block !important;
       }
+
       .glass-card {
         background: none !important;
         border: 1px solid #ccc !important;
@@ -165,21 +178,26 @@
     }
   </style>
 </head>
+
 <body class="bg-slate-950 text-slate-100 flex flex-col min-h-screen">
 
   <!-- Header Bar (App Mode) -->
-  <header id="app-header" class="hidden sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 transition-all">
+  <header id="app-header"
+    class="hidden sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 transition-all">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        
+
         <!-- Brand / Logo -->
         <div class="flex items-center space-x-3 cursor-pointer" onclick="app.switchTab('tracker')">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-teal-700 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-teal-500/20">
+          <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-teal-700 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-teal-500/20">
             W
           </div>
           <div>
             <span class="font-extrabold text-lg tracking-tight text-white flex items-center gap-1.5">
-              WINTER ARC <span class="text-xs px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 font-semibold uppercase tracking-wider" id="header-user-name">Arc Active</span>
+              WINTER ARC <span
+                class="text-xs px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20 font-semibold uppercase tracking-wider"
+                id="header-user-name">Arc Active</span>
             </span>
           </div>
         </div>
@@ -191,7 +209,7 @@
             <span class="text-slate-400">Day:</span>
             <span class="font-bold text-white" id="banner-days-count">0 / 92</span>
           </div>
-          
+
           <div class="flex items-center gap-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
             <i class="fa-solid fa-[#facc15] fa-fire text-amber-400"></i>
             <span class="text-slate-400">Streak:</span>
@@ -207,12 +225,15 @@
 
         <!-- Auto-Save Status Badge & Mobile Actions -->
         <div class="flex items-center gap-3">
-          <div id="save-status-badge" class="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-850 px-2.5 py-1 rounded-full border border-slate-800 transition-all">
+          <div id="save-status-badge"
+            class="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-850 px-2.5 py-1 rounded-full border border-slate-800 transition-all">
             <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse" id="save-status-dot"></span>
             <span id="save-status-text">✓ Progress saved</span>
           </div>
 
-          <button onclick="app.openResetModal()" class="text-slate-400 hover:text-red-400 text-xs px-2 py-1 rounded transition-colors" title="Reset Arc Setup">
+          <button onclick="app.openResetModal()"
+            class="text-slate-400 hover:text-red-400 text-xs px-2 py-1 rounded transition-colors"
+            title="Reset Arc Setup">
             <i class="fa-solid fa-power-off"></i>
           </button>
         </div>
@@ -220,25 +241,32 @@
 
       <!-- Main Navigation Tabs -->
       <nav class="flex space-x-1 overflow-x-auto py-2 border-t border-slate-800/60 no-scrollbar text-sm font-medium">
-        <button onclick="app.switchTab('tracker')" id="nav-btn-tracker" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('tracker')" id="nav-btn-tracker"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-solid fa-pen-to-square text-teal-400"></i> Track Today
         </button>
-        <button onclick="app.switchTab('dashboard')" id="nav-btn-dashboard" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('dashboard')" id="nav-btn-dashboard"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-solid fa-gauge-high text-sky-400"></i> Dashboard
         </button>
-        <button onclick="app.switchTab('calendar')" id="nav-btn-calendar" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('calendar')" id="nav-btn-calendar"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-regular fa-calendar-days text-indigo-400"></i> Calendar
         </button>
-        <button onclick="app.switchTab('analytics')" id="nav-btn-analytics" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('analytics')" id="nav-btn-analytics"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-solid fa-chart-pie text-emerald-400"></i> Analytics
         </button>
-        <button onclick="app.switchTab('habits')" id="nav-btn-habits" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('habits')" id="nav-btn-habits"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-solid fa-sliders text-amber-400"></i> Habits Manager
         </button>
-        <button onclick="app.switchTab('report')" id="nav-btn-report" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('report')" id="nav-btn-report"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-solid fa-trophy text-yellow-400"></i> 3-Month Report
         </button>
-        <button onclick="app.switchTab('backup')" id="nav-btn-backup" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
+        <button onclick="app.switchTab('backup')" id="nav-btn-backup"
+          class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all whitespace-nowrap">
           <i class="fa-solid fa-database text-purple-400"></i> Backup & Sync
         </button>
       </nav>
@@ -251,33 +279,38 @@
     <section id="view-landing" class="view-section py-8 sm:py-16">
       <!-- Hero Section -->
       <div class="text-center max-w-3xl mx-auto space-y-6">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs sm:text-sm font-semibold tracking-wide">
+        <div
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs sm:text-sm font-semibold tracking-wide">
           <i class="fa-solid fa-snowflake text-teal-400 animate-spin-slow"></i> Winter Arc Season Is Here
         </div>
-        
+
         <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
           Build Your <span class="text-gradient-teal">Winter Arc.</span>
         </h1>
-        
+
         <p class="text-lg sm:text-xl text-slate-300 leading-relaxed font-light">
           Track your habits. Build discipline. See your progress.<br class="hidden sm:inline">
           A clean, local-first, privacy-focused tracker for your 92-day winter transformation.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          <button onclick="app.startSetupWizard()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 font-bold text-lg shadow-lg shadow-teal-500/25 transition-all transform hover:-translate-y-0.5">
+          <button onclick="app.startSetupWizard()"
+            class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-slate-950 font-bold text-lg shadow-lg shadow-teal-500/25 transition-all transform hover:-translate-y-0.5">
             <i class="fa-solid fa-bolt mr-2"></i> Start My Winter Arc
           </button>
-          <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 transition-all text-center">
+          <a href="#how-it-works"
+            class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 transition-all text-center">
             How It Works
           </a>
         </div>
       </div>
 
       <!-- Live Interactive Visual Preview Card -->
-      <div class="mt-16 max-w-5xl mx-auto glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden">
-        <div class="absolute -top-24 -right-24 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        
+      <div
+        class="mt-16 max-w-5xl mx-auto glass-card rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none">
+        </div>
+
         <div class="flex items-center justify-between pb-6 border-b border-slate-800">
           <div class="flex items-center space-x-3">
             <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
@@ -285,13 +318,16 @@
             <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
             <span class="text-xs text-slate-400 ml-2 font-mono">dashboard_preview.app</span>
           </div>
-          <span class="text-xs font-semibold px-2.5 py-1 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">LIVE DEMO PREVIEW</span>
+          <span
+            class="text-xs font-semibold px-2.5 py-1 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20">LIVE
+            DEMO PREVIEW</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
             <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Overall Progress</div>
-            <div class="text-3xl font-extrabold text-white">Day 34 <span class="text-slate-500 text-lg font-normal">/ 92</span></div>
+            <div class="text-3xl font-extrabold text-white">Day 34 <span class="text-slate-500 text-lg font-normal">/
+                92</span></div>
             <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
               <div class="bg-gradient-to-r from-teal-400 to-sky-500 h-full w-[37%]"></div>
             </div>
@@ -303,13 +339,15 @@
             <div class="text-3xl font-extrabold text-amber-400 flex items-center gap-2">
               🔥 14 Days
             </div>
-            <p class="text-xs text-slate-400 mt-2">Longest Streak: <span class="text-white font-semibold">18 Days</span></p>
+            <p class="text-xs text-slate-400 mt-2">Longest Streak: <span class="text-white font-semibold">18 Days</span>
+            </p>
           </div>
 
           <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
             <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Today's Discipline Score</div>
             <div class="text-3xl font-extrabold text-teal-300">92 / 100</div>
-            <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-trend-up"></i> +8% higher than last week</p>
+            <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-arrow-trend-up"></i> +8% higher than last
+              week</p>
           </div>
         </div>
       </div>
@@ -317,38 +355,68 @@
       <!-- What You Can Track Grid -->
       <div class="mt-20">
         <h2 class="text-2xl sm:text-3xl font-bold text-center text-white mb-2">What You Can Track</h2>
-        <p class="text-slate-400 text-center text-sm max-w-xl mx-auto mb-12">Everything you need to optimize physical health, mental focus, and personal habits during your Winter Arc.</p>
+        <p class="text-slate-400 text-center text-sm max-w-xl mx-auto mb-12">Everything you need to optimize physical
+          health, mental focus, and personal habits during your Winter Arc.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
-            <div class="w-12 h-12 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-dumbbell"></i></div>
+            <div
+              class="w-12 h-12 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center text-xl mb-4"><i
+                class="fa-solid fa-dumbbell"></i></div>
             <h3 class="font-bold text-lg text-white mb-1">Fitness & Steps</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">Log workouts, exercise types, duration, total daily steps, running distance, and stretching.</p>
+            <p class="text-slate-400 text-xs leading-relaxed">Log workouts, exercise types, duration, total daily steps,
+              running distance, and stretching.</p>
           </div>
 
           <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
-            <div class="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-moon"></i></div>
+            <div
+              class="w-12 h-12 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-moon"></i>
+            </div>
             <h3 class="font-bold text-lg text-white mb-1">Sleep & Recovery</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">Track bedtime, wake times, total hours slept, and qualitative sleep ratings.</p>
+            <p class="text-slate-400 text-xs leading-relaxed">Track bedtime, wake times, total hours slept, and
+              qualitative sleep ratings.</p>
           </div>
 
           <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
-            <div class="w-12 h-12 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-bullseye"></i></div>
+            <div
+              class="w-12 h-12 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-bullseye"></i>
+            </div>
             <h3 class="font-bold text-lg text-white mb-1">Habits & Bad Habits</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">Custom habit checklists for positive goals alongside optional trackers for unwanted vices.</p>
+            <p class="text-slate-400 text-xs leading-relaxed">Custom habit checklists for positive goals alongside
+              optional trackers for unwanted vices.</p>
           </div>
 
           <div class="glass-card p-6 rounded-xl border border-slate-800 hover:border-teal-500/40 transition-all">
-            <div class="w-12 h-12 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-brain"></i></div>
+            <div
+              class="w-12 h-12 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4">
+              <i class="fa-solid fa-brain"></i>
+            </div>
             <h3 class="font-bold text-lg text-white mb-1">Productivity & Notes</h3>
-            <p class="text-slate-400 text-xs leading-relaxed">Monitor study hours, screen time, reading, mood, energy, daily wins, and reflections.</p>
+            <p class="text-slate-400 text-xs leading-relaxed">Monitor study hours, screen time, reading, mood, energy,
+              daily wins, and reflections.</p>
           </div>
         </div>
       </div>
 
       <!-- Advertisement Placeholder Slot (Landing) -->
-      <div class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
-        <i class="fa-regular fa-rectangle-ad mr-2"></i> Advertisement Placeholder
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+        <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+          Advertisement
+        </div>
+        <script>
+          atOptions = {
+            'key': '3aeee2f2552e3e984f334587e5518bff',
+            'format': 'iframe',
+            'height': 250,
+            'width': 300,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/3aeee2f2552e3e984f334587e5518bff/invoke.js"></script>
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
       </div>
 
       <!-- How It Works Section -->
@@ -356,32 +424,45 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-center text-white mb-12">How Winter Arc Works</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div class="text-center space-y-3">
-            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">1</div>
+            <div
+              class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">
+              1</div>
             <h4 class="font-bold text-white text-base">Set Your Dates & Focus</h4>
-            <p class="text-slate-400 text-xs">Configure your 90-day window (Default: Oct 1 - Dec 31) and select your primary arc focus areas.</p>
+            <p class="text-slate-400 text-xs">Configure your 90-day window (Default: Oct 1 - Dec 31) and select your
+              primary arc focus areas.</p>
           </div>
 
           <div class="text-center space-y-3">
-            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">2</div>
+            <div
+              class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">
+              2</div>
             <h4 class="font-bold text-white text-base">Track Daily Inputs</h4>
-            <p class="text-slate-400 text-xs">Log workouts, sleep, habits, and reflections in under 2 minutes every night.</p>
+            <p class="text-slate-400 text-xs">Log workouts, sleep, habits, and reflections in under 2 minutes every
+              night.</p>
           </div>
 
           <div class="text-center space-y-3">
-            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">3</div>
+            <div
+              class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">
+              3</div>
             <h4 class="font-bold text-white text-base">Build Discipline Streaks</h4>
-            <p class="text-slate-400 text-xs">Watch your streaks grow and review automated weekly and monthly trend analytics.</p>
+            <p class="text-slate-400 text-xs">Watch your streaks grow and review automated weekly and monthly trend
+              analytics.</p>
           </div>
 
           <div class="text-center space-y-3">
-            <div class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">4</div>
+            <div
+              class="w-10 h-10 rounded-full bg-teal-500 text-slate-950 font-black flex items-center justify-center mx-auto text-lg shadow-md shadow-teal-500/20">
+              4</div>
             <h4 class="font-bold text-white text-base">Export & Own Your Data</h4>
-            <p class="text-slate-400 text-xs">All data stays 100% in your browser. Export JSON backups or CSV spreadsheets anytime.</p>
+            <p class="text-slate-400 text-xs">All data stays 100% in your browser. Export JSON backups or CSV
+              spreadsheets anytime.</p>
           </div>
         </div>
 
         <div class="mt-12 text-center">
-          <button onclick="app.startSetupWizard()" class="px-8 py-3.5 rounded-xl bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-base transition-all">
+          <button onclick="app.startSetupWizard()"
+            class="px-8 py-3.5 rounded-xl bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-base transition-all">
             Get Started Now — Free & Private
           </button>
         </div>
@@ -389,60 +470,82 @@
     </section>
 
     <!-- ==================== SETUP WIZARD MODAL ==================== -->
-    <div id="modal-setup" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+    <div id="modal-setup"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
       <div class="glass-card max-w-xl w-full rounded-2xl p-6 sm:p-8 border border-slate-700 my-8 shadow-2xl relative">
         <h2 class="text-2xl font-extrabold text-white mb-1 flex items-center gap-2">
           <i class="fa-solid fa-snowflake text-teal-400"></i> Configure Your Winter Arc
         </h2>
-        <p class="text-xs text-slate-400 mb-6">Set up your challenge parameters. You can change these habits anytime in settings.</p>
+        <p class="text-xs text-slate-400 mb-6">Set up your challenge parameters. You can change these habits anytime in
+          settings.</p>
 
         <form id="setup-form" onsubmit="app.handleSetupSubmit(event)" class="space-y-5">
           <!-- Name -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Your Name (Optional)</label>
-            <input type="text" id="setup-name" placeholder="e.g. Alex" class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Your Name
+              (Optional)</label>
+            <input type="text" id="setup-name" placeholder="e.g. Alex"
+              class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
           </div>
 
           <!-- Dates Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Start Date</label>
-              <input type="date" id="setup-start-date" required class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Start
+                Date</label>
+              <input type="date" id="setup-start-date" required
+                class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">End Date</label>
-              <input type="date" id="setup-end-date" required class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
+              <input type="date" id="setup-end-date" required
+                class="w-full input-field rounded-lg px-3.5 py-2.5 text-sm">
             </div>
           </div>
 
           <!-- Focus Areas Multi-Select -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Choose Your Primary Focus Areas</label>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Choose Your Primary
+              Focus Areas</label>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="setup-focus-chips">
-              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
-                <input type="checkbox" value="Fitness" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Fitness
+              <label
+                class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Fitness" checked
+                  class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Fitness
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
-                <input type="checkbox" value="Health" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Health
+              <label
+                class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Health" checked
+                  class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Health
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
-                <input type="checkbox" value="Study" class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Study
+              <label
+                class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Study"
+                  class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Study
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
-                <input type="checkbox" value="Productivity" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Productivity
+              <label
+                class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Productivity" checked
+                  class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Productivity
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
-                <input type="checkbox" value="Discipline" checked class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Discipline
+              <label
+                class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Discipline" checked
+                  class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Discipline
               </label>
-              <label class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
-                <input type="checkbox" value="Personal Dev" class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Custom
+              <label
+                class="flex items-center gap-2 p-2.5 rounded-lg border border-slate-800 bg-slate-900/60 text-xs text-slate-300 cursor-pointer hover:border-slate-700">
+                <input type="checkbox" value="Personal Dev"
+                  class="rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0"> Custom
               </label>
             </div>
           </div>
 
           <div class="pt-4 flex items-center justify-end gap-3">
-            <button type="button" onclick="app.closeSetupWizard()" class="px-4 py-2.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold">Cancel</button>
-            <button type="submit" class="px-6 py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-sm transition-all">
+            <button type="button" onclick="app.closeSetupWizard()"
+              class="px-4 py-2.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold">Cancel</button>
+            <button type="submit"
+              class="px-6 py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-sm transition-all">
               Create My Winter Arc <i class="fa-solid fa-arrow-right ml-1"></i>
             </button>
           </div>
@@ -452,24 +555,30 @@
 
     <!-- ==================== VIEW 1: DAILY TRACKER ==================== -->
     <section id="view-tracker" class="view-section hidden space-y-6">
-      
+
       <!-- Date Navigation Top Bar -->
-      <div class="glass-card p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
+      <div
+        class="glass-card p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
         <div class="flex items-center gap-3">
-          <button onclick="app.navigateDate(-1)" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
+          <button onclick="app.navigateDate(-1)"
+            class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
             <i class="fa-solid fa-chevron-left"></i>
           </button>
           <div class="text-center sm:text-left">
-            <label class="block text-[10px] text-slate-400 uppercase tracking-widest font-bold">Active Tracking Date</label>
-            <input type="date" id="tracker-date-picker" onchange="app.onTrackerDateChange(this.value)" class="bg-transparent text-white font-extrabold text-lg sm:text-xl border-none focus:ring-0 cursor-pointer p-0">
+            <label class="block text-[10px] text-slate-400 uppercase tracking-widest font-bold">Active Tracking
+              Date</label>
+            <input type="date" id="tracker-date-picker" onchange="app.onTrackerDateChange(this.value)"
+              class="bg-transparent text-white font-extrabold text-lg sm:text-xl border-none focus:ring-0 cursor-pointer p-0">
           </div>
-          <button onclick="app.navigateDate(1)" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
+          <button onclick="app.navigateDate(1)"
+            class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
             <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
 
         <div class="flex items-center gap-2">
-          <button onclick="app.setTrackerDateToday()" class="px-3 py-1.5 rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-semibold hover:bg-teal-500/20 transition-all">
+          <button onclick="app.setTrackerDateToday()"
+            class="px-3 py-1.5 rounded-lg bg-teal-500/10 text-teal-400 border border-teal-500/20 text-xs font-semibold hover:bg-teal-500/20 transition-all">
             <i class="fa-solid fa-calendar-day mr-1"></i> Jump To Today
           </button>
           <div class="text-right pl-4 border-l border-slate-800">
@@ -496,33 +605,40 @@
               <span class="text-xs font-semibold text-slate-300">Workout Completed</span>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" id="track-workout-done" onchange="app.saveCurrentDay()" class="sr-only peer">
-                <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                <div
+                  class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500">
+                </div>
               </label>
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Workout Type</label>
-              <input type="text" id="track-workout-type" placeholder="e.g. Upper Body / Run" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="text" id="track-workout-type" placeholder="e.g. Upper Body / Run"
+                oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Workout Duration (mins)</label>
-              <input type="number" min="0" id="track-workout-min" placeholder="0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="number" min="0" id="track-workout-min" placeholder="0" oninput="app.saveCurrentDay()"
+                class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Daily Steps</label>
-              <input type="number" min="0" id="track-steps" placeholder="0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="number" min="0" id="track-steps" placeholder="0" oninput="app.saveCurrentDay()"
+                class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Run / Walk Distance (km)</label>
-              <input type="number" step="0.1" min="0" id="track-distance" placeholder="0.0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="number" step="0.1" min="0" id="track-distance" placeholder="0.0"
+                oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800">
               <span class="text-xs font-semibold text-slate-300">Stretching / Mobility</span>
-              <input type="checkbox" id="track-stretching" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0 cursor-pointer">
+              <input type="checkbox" id="track-stretching" onchange="app.saveCurrentDay()"
+                class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0 cursor-pointer">
             </div>
           </div>
         </div>
@@ -539,23 +655,30 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs text-slate-400 mb-1">Bedtime Last Night</label>
-              <input type="time" id="track-sleep-bedtime" onchange="app.calculateSleepAndSave()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="time" id="track-sleep-bedtime" onchange="app.calculateSleepAndSave()"
+                class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Wake-up Time</label>
-              <input type="time" id="track-sleep-waketime" onchange="app.calculateSleepAndSave()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="time" id="track-sleep-waketime" onchange="app.calculateSleepAndSave()"
+                class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
           </div>
 
           <div>
             <label class="block text-xs text-slate-400 mb-2">Sleep Quality (1 - 5 Stars)</label>
             <div class="flex items-center gap-2" id="sleep-rating-stars">
-              <button type="button" onclick="app.setSleepRating(1)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
-              <button type="button" onclick="app.setSleepRating(2)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
-              <button type="button" onclick="app.setSleepRating(3)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
-              <button type="button" onclick="app.setSleepRating(4)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
-              <button type="button" onclick="app.setSleepRating(5)" class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(1)"
+                class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(2)"
+                class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(3)"
+                class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(4)"
+                class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
+              <button type="button" onclick="app.setSleepRating(5)"
+                class="star-btn text-xl text-slate-600 hover:text-amber-400"><i class="fa-solid fa-star"></i></button>
             </div>
           </div>
         </div>
@@ -576,27 +699,35 @@
                 <span class="text-[10px] text-slate-500">Target: 8 Glasses</span>
               </div>
               <div class="flex items-center gap-3">
-                <button onclick="app.adjustWater(-1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center">-</button>
+                <button onclick="app.adjustWater(-1)"
+                  class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center">-</button>
                 <span id="track-water-count" class="font-extrabold text-teal-300 text-sm">0 / 8</span>
-                <button onclick="app.adjustWater(1)" class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center">+</button>
+                <button onclick="app.adjustWater(1)"
+                  class="w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold flex items-center justify-center">+</button>
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
+              <label
+                class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
                 <span class="text-xs font-semibold text-slate-300">Healthy Meals Logged</span>
-                <input type="checkbox" id="track-healthy-meal" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
+                <input type="checkbox" id="track-healthy-meal" onchange="app.saveCurrentDay()"
+                  class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
               </label>
 
-              <label class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
+              <label
+                class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
                 <span class="text-xs font-semibold text-slate-300">Junk Food Eaten</span>
-                <input type="checkbox" id="track-junk-food" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-rose-400 focus:ring-0">
+                <input type="checkbox" id="track-junk-food" onchange="app.saveCurrentDay()"
+                  class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-rose-400 focus:ring-0">
               </label>
             </div>
 
-            <label class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
+            <label
+              class="flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 cursor-pointer">
               <span class="text-xs font-semibold text-slate-300">Outdoor Activity / Sunlight</span>
-              <input type="checkbox" id="track-outdoor" onchange="app.saveCurrentDay()" class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
+              <input type="checkbox" id="track-outdoor" onchange="app.saveCurrentDay()"
+                class="w-4 h-4 rounded border-slate-700 bg-slate-800 text-teal-400 focus:ring-0">
             </label>
           </div>
         </div>
@@ -612,22 +743,26 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs text-slate-400 mb-1">Deep Work / Study (Hours)</label>
-              <input type="number" step="0.5" min="0" id="track-work-hours" placeholder="0.0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="number" step="0.5" min="0" id="track-work-hours" placeholder="0.0"
+                oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Reading (Pages or Mins)</label>
-              <input type="text" id="track-reading" placeholder="e.g. 20 pages" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="text" id="track-reading" placeholder="e.g. 20 pages" oninput="app.saveCurrentDay()"
+                class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Screen Time (Hours)</label>
-              <input type="number" step="0.5" min="0" id="track-screen-time" placeholder="0.0" oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="number" step="0.5" min="0" id="track-screen-time" placeholder="0.0"
+                oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
 
             <div>
               <label class="block text-xs text-slate-400 mb-1">Learning / Personal Project</label>
-              <input type="text" id="track-project-notes" placeholder="Notes..." oninput="app.saveCurrentDay()" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+              <input type="text" id="track-project-notes" placeholder="Notes..." oninput="app.saveCurrentDay()"
+                class="w-full input-field rounded-lg px-3 py-2 text-xs">
             </div>
           </div>
         </div>
@@ -651,6 +786,25 @@
         </div>
       </div>
 
+      <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+        Advertisement
+      </div>
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+        <script>
+          atOptions = {
+            'key': '837c0ba1803aafeb73db99139317e24b',
+            'format': 'iframe',
+            'height': 50,
+            'width': 320,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/837c0ba1803aafeb73db99139317e24b/invoke.js"></script>
+
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
+      </div>
+
       <!-- Daily Reflection Card -->
       <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
@@ -662,23 +816,33 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-semibold text-emerald-400 mb-1"><i class="fa-solid fa-trophy mr-1"></i> Today's Win ("What went well?")</label>
-            <textarea id="track-ref-win" rows="2" oninput="app.saveCurrentDay()" placeholder="Logged a great workout..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+            <label class="block text-xs font-semibold text-emerald-400 mb-1"><i class="fa-solid fa-trophy mr-1"></i>
+              Today's Win ("What went well?")</label>
+            <textarea id="track-ref-win" rows="2" oninput="app.saveCurrentDay()" placeholder="Logged a great workout..."
+              class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-rose-400 mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Today's Challenge ("What could improve?")</label>
-            <textarea id="track-ref-challenge" rows="2" oninput="app.saveCurrentDay()" placeholder="Stayed up too late scrolling..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+            <label class="block text-xs font-semibold text-rose-400 mb-1"><i
+                class="fa-solid fa-triangle-exclamation mr-1"></i> Today's Challenge ("What could improve?")</label>
+            <textarea id="track-ref-challenge" rows="2" oninput="app.saveCurrentDay()"
+              placeholder="Stayed up too late scrolling..."
+              class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-sky-400 mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> What I Learned</label>
-            <textarea id="track-ref-learned" rows="2" oninput="app.saveCurrentDay()" placeholder="Consistency > Intensity..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+            <label class="block text-xs font-semibold text-sky-400 mb-1"><i class="fa-solid fa-lightbulb mr-1"></i> What
+              I Learned</label>
+            <textarea id="track-ref-learned" rows="2" oninput="app.saveCurrentDay()"
+              placeholder="Consistency > Intensity..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-amber-400 mb-1"><i class="fa-solid fa-bullseye mr-1"></i> Tomorrow's Main Focus</label>
-            <textarea id="track-ref-tomorrow" rows="2" oninput="app.saveCurrentDay()" placeholder="Morning leg workout at 7 AM..." class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
+            <label class="block text-xs font-semibold text-amber-400 mb-1"><i class="fa-solid fa-bullseye mr-1"></i>
+              Tomorrow's Main Focus</label>
+            <textarea id="track-ref-tomorrow" rows="2" oninput="app.saveCurrentDay()"
+              placeholder="Morning leg workout at 7 AM..."
+              class="w-full input-field rounded-lg p-2.5 text-xs"></textarea>
           </div>
         </div>
 
@@ -689,7 +853,9 @@
               <span class="text-slate-300">Mood Scale (1 - 5)</span>
               <span id="track-mood-val" class="text-teal-400 font-bold">3 / 5</span>
             </div>
-            <input type="range" min="1" max="5" id="track-mood" oninput="app.updateMoodEnergyDisplay(); app.saveCurrentDay();" class="w-full accent-teal-400 cursor-pointer">
+            <input type="range" min="1" max="5" id="track-mood"
+              oninput="app.updateMoodEnergyDisplay(); app.saveCurrentDay();"
+              class="w-full accent-teal-400 cursor-pointer">
           </div>
 
           <div>
@@ -697,7 +863,9 @@
               <span class="text-slate-300">Energy Level (1 - 5)</span>
               <span id="track-energy-val" class="text-amber-400 font-bold">3 / 5</span>
             </div>
-            <input type="range" min="1" max="5" id="track-energy" oninput="app.updateMoodEnergyDisplay(); app.saveCurrentDay();" class="w-full accent-amber-400 cursor-pointer">
+            <input type="range" min="1" max="5" id="track-energy"
+              oninput="app.updateMoodEnergyDisplay(); app.saveCurrentDay();"
+              class="w-full accent-amber-400 cursor-pointer">
           </div>
         </div>
       </div>
@@ -705,14 +873,15 @@
 
     <!-- ==================== VIEW 2: DASHBOARD ==================== -->
     <section id="view-dashboard" class="view-section hidden space-y-6">
-      
+
       <!-- Top Overview Stats Banner -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="glass-card p-5 rounded-xl border border-slate-800">
           <div class="text-xs text-slate-400 uppercase font-bold tracking-wider mb-1">Winter Arc Progress</div>
           <div class="text-3xl font-extrabold text-white" id="dash-days-text">Day 0 / 92</div>
           <div class="w-full bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
-            <div class="bg-gradient-to-r from-teal-400 to-sky-500 h-full" id="dash-progress-bar" style="width: 0%"></div>
+            <div class="bg-gradient-to-r from-teal-400 to-sky-500 h-full" id="dash-progress-bar" style="width: 0%">
+            </div>
           </div>
           <div class="text-right text-xs text-teal-400 mt-1 font-semibold" id="dash-progress-pct">0% Completed</div>
         </div>
@@ -722,7 +891,8 @@
           <div class="text-3xl font-extrabold text-amber-400 flex items-center gap-2" id="dash-current-streak">
             🔥 0 Days
           </div>
-          <p class="text-xs text-slate-400 mt-2">Longest Streak: <span class="text-white font-semibold" id="dash-longest-streak">0 Days</span></p>
+          <p class="text-xs text-slate-400 mt-2">Longest Streak: <span class="text-white font-semibold"
+              id="dash-longest-streak">0 Days</span></p>
         </div>
 
         <div class="glass-card p-5 rounded-xl border border-slate-800">
@@ -743,16 +913,32 @@
         <h3 class="font-bold text-white text-base flex items-center gap-2">
           <i class="fa-solid fa-chart-line text-teal-400"></i> Overall Habit Consistency
         </h3>
-        
+
         <div id="dash-habits-progress-list" class="space-y-3">
           <!-- Dynamic Habit Bars -->
         </div>
       </div>
 
       <!-- Advertisement Placeholder Slot (Dashboard) -->
-      <div class="p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
-        <i class="fa-regular fa-rectangle-ad mr-2"></i> Advertisement Placeholder
+      <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+        Advertisement
       </div>
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+
+        <script>
+          atOptions = {
+            'key': '38c9a34c0d25afda856b7d1e63c780d8',
+            'format': 'iframe',
+            'height': 300,
+            'width': 160,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/38c9a34c0d25afda856b7d1e63c780d8/invoke.js"></script>
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
+      </div>
+
 
       <!-- Recent 7-Day Activity Feed -->
       <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-4">
@@ -768,33 +954,46 @@
 
     <!-- ==================== VIEW 3: CALENDAR ==================== -->
     <section id="view-calendar" class="view-section hidden space-y-6">
-      
+
       <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-6">
         <!-- Calendar Header Controls -->
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center gap-3">
-            <button onclick="app.changeCalendarMonth(-1)" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+            <button onclick="app.changeCalendarMonth(-1)"
+              class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
             <h2 id="cal-month-year-title" class="text-xl font-extrabold text-white">October 2026</h2>
-            <button onclick="app.changeCalendarMonth(1)" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+            <button onclick="app.changeCalendarMonth(1)"
+              class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
 
           <!-- Status Color Key -->
           <div class="flex flex-wrap items-center gap-3 text-xs">
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Excellent (80%+)</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-teal-500"></span> Good (50-79%)</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Partial (1-49%)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Excellent
+              (80%+)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-teal-500"></span> Good
+              (50-79%)</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Partial
+              (1-49%)</span>
             <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Missed</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700"></span> Future/Unlogged</span>
+            <span class="flex items-center gap-1.5"><span
+                class="w-3 h-3 rounded-full bg-slate-800 border border-slate-700"></span> Future/Unlogged</span>
           </div>
         </div>
 
         <!-- Day of Week Grid Header -->
-        <div class="grid grid-cols-7 text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-2 border-b border-slate-800">
-          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        <div
+          class="grid grid-cols-7 text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-2 border-b border-slate-800">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
         </div>
 
         <!-- Dynamic Days Grid -->
@@ -806,13 +1005,16 @@
 
     <!-- ==================== VIEW 4: ANALYTICS ==================== -->
     <section id="view-analytics" class="view-section hidden space-y-6">
-      
+
       <!-- Analytics Period Switcher -->
       <div class="flex justify-center border-b border-slate-800 pb-4">
         <div class="inline-flex rounded-lg bg-slate-900 p-1 border border-slate-800 text-xs font-medium">
-          <button onclick="app.setAnalyticsPeriod('weekly')" id="an-tab-weekly" class="px-4 py-2 rounded-md text-white bg-slate-800 font-bold">Weekly View</button>
-          <button onclick="app.setAnalyticsPeriod('monthly')" id="an-tab-monthly" class="px-4 py-2 rounded-md text-slate-400 hover:text-white">Monthly View</button>
-          <button onclick="app.setAnalyticsPeriod('full')" id="an-tab-full" class="px-4 py-2 rounded-md text-slate-400 hover:text-white">Full Arc View</button>
+          <button onclick="app.setAnalyticsPeriod('weekly')" id="an-tab-weekly"
+            class="px-4 py-2 rounded-md text-white bg-slate-800 font-bold">Weekly View</button>
+          <button onclick="app.setAnalyticsPeriod('monthly')" id="an-tab-monthly"
+            class="px-4 py-2 rounded-md text-slate-400 hover:text-white">Monthly View</button>
+          <button onclick="app.setAnalyticsPeriod('full')" id="an-tab-full"
+            class="px-4 py-2 rounded-md text-slate-400 hover:text-white">Full Arc View</button>
         </div>
       </div>
 
@@ -821,12 +1023,32 @@
         <!-- Dynamic Cards -->
       </div>
 
+      <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+        Advertisement
+      </div>
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+
+        <script>
+          atOptions = {
+            'key': '837c0ba1803aafeb73db99139317e24b',
+            'format': 'iframe',
+            'height': 50,
+            'width': 320,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/837c0ba1803aafeb73db99139317e24b/invoke.js"></script>
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
+      </div>
+
       <!-- Custom Lightweight SVG Completion Rate Trend Chart -->
       <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-4">
         <h3 class="font-bold text-white text-base flex items-center gap-2">
           <i class="fa-solid fa-chart-area text-teal-400"></i> Completion Rate Trend (%)
         </h3>
-        <div id="analytics-chart-container" class="w-full h-48 sm:h-64 flex items-end justify-between gap-1 pt-6 pb-2 border-b border-slate-800 px-2">
+        <div id="analytics-chart-container"
+          class="w-full h-48 sm:h-64 flex items-end justify-between gap-1 pt-6 pb-2 border-b border-slate-800 px-2">
           <!-- SVG or HTML Bars injected here -->
         </div>
       </div>
@@ -834,14 +1056,16 @@
       <!-- Detailed Breakdown Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
-          <h4 class="font-bold text-white text-sm text-teal-300"><i class="fa-solid fa-award mr-1"></i> Performance Highlights</h4>
+          <h4 class="font-bold text-white text-sm text-teal-300"><i class="fa-solid fa-award mr-1"></i> Performance
+            Highlights</h4>
           <ul class="text-xs text-slate-300 space-y-2" id="an-highlights-list">
             <!-- Dynamic highlights -->
           </ul>
         </div>
 
         <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
-          <h4 class="font-bold text-white text-sm text-indigo-300"><i class="fa-solid fa-bed mr-1"></i> Sleep & Mood Trends</h4>
+          <h4 class="font-bold text-white text-sm text-indigo-300"><i class="fa-solid fa-bed mr-1"></i> Sleep & Mood
+            Trends</h4>
           <ul class="text-xs text-slate-300 space-y-2" id="an-trends-list">
             <!-- Dynamic trends -->
           </ul>
@@ -851,13 +1075,14 @@
 
     <!-- ==================== VIEW 5: HABITS MANAGER ==================== -->
     <section id="view-habits" class="view-section hidden space-y-6">
-      
+
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 class="text-xl font-extrabold text-white">Habit Management</h2>
           <p class="text-xs text-slate-400">Create, edit, or remove good and unwanted habit goals.</p>
         </div>
-        <button onclick="app.openHabitModal()" class="px-4 py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs transition-all">
+        <button onclick="app.openHabitModal()"
+          class="px-4 py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs transition-all">
           <i class="fa-solid fa-plus mr-1"></i> Add Custom Habit
         </button>
       </div>
@@ -866,19 +1091,42 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="habits-manager-list">
         <!-- Injected habit cards -->
       </div>
+      <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+        Advertisement
+      </div>
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+
+        <script>
+          atOptions = {
+            'key': '837c0ba1803aafeb73db99139317e24b',
+            'format': 'iframe',
+            'height': 50,
+            'width': 320,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/837c0ba1803aafeb73db99139317e24b/invoke.js"></script>
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
+      </div>
+
     </section>
 
     <!-- ==================== VIEW 6: 3-MONTH REPORT ==================== -->
     <section id="view-report" class="view-section hidden space-y-6">
-      <div class="glass-card p-8 rounded-2xl border border-slate-700 space-y-8 max-w-4xl mx-auto relative overflow-hidden" id="report-card">
-        
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-6 gap-4">
+      <div
+        class="glass-card p-8 rounded-2xl border border-slate-700 space-y-8 max-w-4xl mx-auto relative overflow-hidden"
+        id="report-card">
+
+        <div
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-6 gap-4">
           <div>
             <div class="text-xs uppercase font-bold text-teal-400 tracking-widest mb-1">Winter Arc Final Report</div>
             <h1 class="text-3xl font-extrabold text-white" id="report-user-title">My Winter Arc</h1>
             <p class="text-xs text-slate-400" id="report-date-range">Oct 1 - Dec 31</p>
           </div>
-          <button onclick="window.print()" class="no-print px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
+          <button onclick="window.print()"
+            class="no-print px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold">
             <i class="fa-solid fa-print mr-1"></i> Print / Save Report PDF
           </button>
         </div>
@@ -924,17 +1172,37 @@
           </div>
         </div>
       </div>
+      <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+        Advertisement
+      </div>
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+
+        <script>
+          atOptions = {
+            'key': '837c0ba1803aafeb73db99139317e24b',
+            'format': 'iframe',
+            'height': 50,
+            'width': 320,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/837c0ba1803aafeb73db99139317e24b/invoke.js"></script>
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
+      </div>
+
     </section>
 
     <!-- ==================== VIEW 7: BACKUP & RESTORE ==================== -->
     <section id="view-backup" class="view-section hidden space-y-6 max-w-4xl mx-auto">
-      
+
       <div class="glass-card p-6 rounded-xl border border-slate-800 space-y-6">
         <div>
           <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
             <i class="fa-solid fa-shield-halved text-teal-400"></i> Data Safety, Sync & Backups
           </h2>
-          <p class="text-xs text-slate-400 mt-1">Your data is stored 100% locally on your browser using IndexedDB. Export your file to move data across devices or store safe offline backups.</p>
+          <p class="text-xs text-slate-400 mt-1">Your data is stored 100% locally on your browser using IndexedDB.
+            Export your file to move data across devices or store safe offline backups.</p>
         </div>
 
         <!-- Device Sync Explanation Box -->
@@ -954,10 +1222,12 @@
           <!-- Export JSON Button -->
           <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
             <div>
-              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-export text-teal-400 mr-1.5"></i> Export Backup</h4>
+              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-export text-teal-400 mr-1.5"></i>
+                Export Backup</h4>
               <p class="text-[11px] text-slate-400 mb-4">Save complete Winter Arc JSON backup file.</p>
             </div>
-            <button onclick="app.exportJSONBackup()" class="w-full py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs transition-all">
+            <button onclick="app.exportJSONBackup()"
+              class="w-full py-2.5 rounded-lg bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs transition-all">
               Export JSON
             </button>
           </div>
@@ -965,42 +1235,68 @@
           <!-- Import JSON Button -->
           <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
             <div>
-              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-import text-indigo-400 mr-1.5"></i> Restore Backup</h4>
+              <h4 class="font-bold text-white text-sm mb-1"><i
+                  class="fa-solid fa-file-import text-indigo-400 mr-1.5"></i> Restore Backup</h4>
               <p class="text-[11px] text-slate-400 mb-4">Load saved JSON file from your device.</p>
             </div>
-            <label class="w-full text-center py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs cursor-pointer transition-all">
+            <label
+              class="w-full text-center py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs cursor-pointer transition-all">
               Import Backup File
-              <input type="file" id="import-file-input" accept=".json" onchange="app.importJSONBackup(event)" class="hidden">
+              <input type="file" id="import-file-input" accept=".json" onchange="app.importJSONBackup(event)"
+                class="hidden">
             </label>
           </div>
 
           <!-- Export CSV Button -->
           <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
             <div>
-              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-csv text-emerald-400 mr-1.5"></i> Spreadsheet CSV</h4>
+              <h4 class="font-bold text-white text-sm mb-1"><i class="fa-solid fa-file-csv text-emerald-400 mr-1.5"></i>
+                Spreadsheet CSV</h4>
               <p class="text-[11px] text-slate-400 mb-4">Export raw logs for Excel or Google Sheets.</p>
             </div>
-            <button onclick="app.exportCSVData()" class="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all">
+            <button onclick="app.exportCSVData()"
+              class="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition-all">
               Download CSV
             </button>
           </div>
         </div>
       </div>
+      <div class="text-center text-xs text-slate-500 uppercase tracking-widest mb-2">
+        Advertisement
+      </div>
+      <div
+        class="my-16 max-w-4xl mx-auto p-4 rounded-xl border border-dashed border-slate-800 bg-slate-900/30 text-center text-slate-600 text-xs uppercase tracking-widest font-mono">
+
+        <script>
+          atOptions = {
+            'key': '837c0ba1803aafeb73db99139317e24b',
+            'format': 'iframe',
+            'height': 50,
+            'width': 320,
+            'params': {}
+          };
+        </script>
+        <script src="https://www.highrevenueformat.com/837c0ba1803aafeb73db99139317e24b/invoke.js"></script>
+        <div id="container-9b0951624c19e3bda66f7c8463741d13"></div>
+      </div>
+
     </section>
 
   </main>
 
   <!-- ==================== HABIT CREATION MODAL ==================== -->
-  <div id="modal-habit" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+  <div id="modal-habit"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
     <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-slate-700 space-y-4">
       <h3 class="text-lg font-bold text-white" id="habit-modal-title">Add Custom Habit</h3>
-      
+
       <form onsubmit="app.saveHabitModal(event)" class="space-y-4">
         <input type="hidden" id="habit-edit-id">
-        
+
         <div>
           <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Habit Title</label>
-          <input type="text" id="habit-title-input" required placeholder="e.g. Read 20 pages" class="w-full input-field rounded-lg px-3 py-2 text-xs">
+          <input type="text" id="habit-title-input" required placeholder="e.g. Read 20 pages"
+            class="w-full input-field rounded-lg px-3 py-2 text-xs">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1025,30 +1321,38 @@
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-2">
-          <button type="button" onclick="app.closeHabitModal()" class="px-3 py-2 text-xs text-slate-400 hover:text-white">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-lg bg-teal-400 text-slate-950 font-bold text-xs">Save Habit</button>
+          <button type="button" onclick="app.closeHabitModal()"
+            class="px-3 py-2 text-xs text-slate-400 hover:text-white">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-teal-400 text-slate-950 font-bold text-xs">Save
+            Habit</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Custom Confirmation Modal -->
-  <div id="modal-confirm" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+  <div id="modal-confirm"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
     <div class="glass-card max-w-sm w-full rounded-2xl p-6 border border-slate-700 text-center space-y-4">
-      <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl mx-auto"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl mx-auto">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
       <h3 class="text-base font-bold text-white" id="confirm-modal-title">Confirm Action</h3>
       <p class="text-xs text-slate-300 leading-relaxed" id="confirm-modal-msg">Are you sure?</p>
-      
+
       <div class="flex items-center justify-center gap-3 pt-2">
-        <button id="confirm-btn-cancel" class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">Cancel</button>
-        <button id="confirm-btn-ok" class="px-5 py-2 rounded-lg bg-rose-500 text-white text-xs font-bold">Continue</button>
+        <button id="confirm-btn-cancel"
+          class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold">Cancel</button>
+        <button id="confirm-btn-ok"
+          class="px-5 py-2 rounded-lg bg-rose-500 text-white text-xs font-bold">Continue</button>
       </div>
     </div>
   </div>
 
   <!-- Footer -->
   <footer class="mt-auto border-t border-slate-900 py-6 text-center text-xs text-slate-500 no-print">
-    <p>Winter Arc Challenge Tracker — 100% Local & Private Browser App By <a style="color: #0284c7;" href="https://tsk-digital.netlify.app/">TSK DIGITALS </a></p>
+    <p>Winter Arc Challenge Tracker — 100% Local & Private Browser App By <a style="color: #0284c7;"
+        href="https://tsk-digital.netlify.app/">TSK DIGITALS </a></p>
   </footer>
 
   <!-- ==================== JAVASCRIPT APP LOGIC ==================== -->
@@ -1134,7 +1438,7 @@
       setFallback(key, val) {
         try {
           localStorage.setItem(key, JSON.stringify(val));
-        } catch (e) {}
+        } catch (e) { }
       }
     }
 
@@ -1249,7 +1553,7 @@
 
       switchTab(tabKey) {
         this.activeTab = tabKey;
-        
+
         // Update nav buttons
         document.querySelectorAll('.nav-tab-btn').forEach(btn => {
           btn.classList.remove('text-white', 'bg-slate-800/80', 'font-bold');
@@ -1392,11 +1696,10 @@
             const isChecked = !!(log.habits && log.habits[h.id]);
             const isGood = h.type === 'good';
             const habitCard = document.createElement('label');
-            habitCard.className = `flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all ${
-              isChecked 
-                ? (isGood ? 'bg-teal-500/10 border-teal-500/40 text-teal-200' : 'bg-rose-500/10 border-rose-500/40 text-rose-200')
-                : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
-            }`;
+            habitCard.className = `flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all ${isChecked
+              ? (isGood ? 'bg-teal-500/10 border-teal-500/40 text-teal-200' : 'bg-rose-500/10 border-rose-500/40 text-rose-200')
+              : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
+              }`;
             habitCard.innerHTML = `
               <div class="flex items-center gap-2">
                 <i class="${isGood ? 'fa-solid fa-circle-check text-teal-400' : 'fa-solid fa-ban text-rose-400'} text-sm"></i>
@@ -1586,7 +1889,7 @@
         let tempStreak = 0;
 
         let checkDate = new Date();
-        
+
         // Loop backwards from today
         for (let i = 0; i < 92; i++) {
           const y = checkDate.getFullYear();
@@ -2068,7 +2371,7 @@
 
       escapeHTML(str) {
         if (!str) return '';
-        return str.replace(/[&<>'"]/g, 
+        return str.replace(/[&<>'"]/g,
           tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
         );
       }
@@ -2082,4 +2385,5 @@
     });
   </script>
 </body>
+
 </html>
